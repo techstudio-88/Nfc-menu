@@ -575,6 +575,24 @@ export const supportRequests = pgTable(
   (t) => [index("support_rest_idx").on(t.restaurantId)],
 );
 
+export const workspaceAccessRequests = pgTable(
+  "workspace_access_requests",
+  {
+    id: id(),
+    name: text("name").notNull(),
+    restaurantName: text("restaurant_name").notNull(),
+    email: text("email").notNull(),
+    phone: text("phone").notNull().default(""),
+    city: text("city").notNull().default(""),
+    message: text("message").notNull().default(""),
+    status: text("status").notNull().default("pending"),
+    adminNote: text("admin_note").notNull().default(""),
+    createdAt: created(),
+    reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  },
+  (t) => [index("workspace_access_status_created_idx").on(t.status, t.createdAt)],
+);
+
 export const inventoryItems = pgTable("inventory_items", { id: id(), restaurantId: rid(), name: text("name").notNull(), unit: text("unit").notNull().default("pcs"), stock: integer("stock").notNull().default(0), lowStockAt: integer("low_stock_at").notNull().default(5), costPerUnit: integer("cost_per_unit").notNull().default(0), active: boolean("active").notNull().default(true), createdAt: created(), updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow() }, (t) => [index("inventory_items_restaurant_idx").on(t.restaurantId, t.active, t.name)]);
 
 export const _pk = primaryKey; // keep import used for future composite keys
