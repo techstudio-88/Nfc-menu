@@ -4,13 +4,6 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/client";
 import { Button, Field, Input } from "@/components/ui";
 
-const DEMOS = [
-  { label: "Owner", email: "owner@ember.demo", pw: "demo12345" },
-  { label: "Kitchen", email: "kitchen@ember.demo", pw: "demo12345" },
-  { label: "Waiter", email: "waiter@ember.demo", pw: "demo12345" },
-  { label: "Platform admin", email: "admin@tapmenu.app", pw: "admin12345" },
-];
-
 export function AuthForm({ mode, demo }: { mode: "login" | "signup"; demo: boolean }) {
   const router = useRouter();
   const [f, setF] = useState({ name: "", email: "", password: "", restaurantName: "", slug: "" });
@@ -65,18 +58,26 @@ export function AuthForm({ mode, demo }: { mode: "login" | "signup"; demo: boole
           {mode === "login" ? "Sign in" : "Create workspace"}
         </Button>
       </form>
-      {demo && (
+      {demo && mode === "login" && (
         <div className="mt-6 border-t border-white/10 pt-5">
-          <p className="mb-2 text-xs uppercase tracking-wider text-neutral-500">Demo workspace · one-click sign in</p>
-          <div className="grid grid-cols-2 gap-2">
-            {DEMOS.map((d) => (
-              <Button key={d.label} size="sm" disabled={busy} onClick={(e) => submit(e, { email: d.email, password: d.pw })}>
-                {d.label}
-              </Button>
-            ))}
-          </div>
+          <p className="mb-3 text-xs uppercase tracking-[.18em] text-neutral-500">Explore before you commit</p>
+          <Button size="lg" disabled={busy} className="w-full" onClick={async () => {
+            setErr("");
+            setBusy(true);
+            try {
+              const r = await api<{ home: string }>("/api/auth/demo", { body: {} });
+              router.push(r.home);
+              router.refresh();
+            } catch (er) {
+              setErr(er instanceof Error ? er.message : "Could not start demo");
+              setBusy(false);
+            }
+          }}>
+            ✦ Launch a fresh demo workspace
+          </Button>
+          <p className="mt-3 text-center text-[11px] leading-5 text-neutral-500">A private sample restaurant is created for this demo session. Your changes won't affect anyone else's demo.</p>
         </div>
-      )}
+      )}}
     </div>
   );
 }
