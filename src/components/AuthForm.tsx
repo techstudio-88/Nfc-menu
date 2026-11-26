@@ -26,7 +26,7 @@ export function AuthForm({ mode, demo }: { mode: "login" | "signup"; demo: boole
   };
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-neutral-900/70 p-7 shadow-2xl backdrop-blur">
+    <div className="senso-auth-card rounded-3xl border border-white/10 bg-neutral-900/70 p-7 shadow-2xl backdrop-blur">
       <h1 className="font-display text-3xl text-white">{mode === "login" ? "Welcome back" : "Open your restaurant"}</h1>
       <p className="mt-1 text-sm text-neutral-400">{mode === "login" ? "Sign in to your workspace." : "Your own isolated workspace, ready in seconds."}</p>
       <form onSubmit={submit} className="mt-6 space-y-4">
