@@ -575,4 +575,6 @@ export const supportRequests = pgTable(
   (t) => [index("support_rest_idx").on(t.restaurantId)],
 );
 
+export const inventoryItems = pgTable("inventory_items", { id: id(), restaurantId: rid(), name: text("name").notNull(), unit: text("unit").notNull().default("pcs"), stock: integer("stock").notNull().default(0), lowStockAt: integer("low_stock_at").notNull().default(5), costPerUnit: integer("cost_per_unit").notNull().default(0), active: boolean("active").notNull().default(true), createdAt: created(), updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow() }, (t) => [index("inventory_items_restaurant_idx").on(t.restaurantId, t.active, t.name)]);
+
 export const _pk = primaryKey; // keep import used for future composite keys

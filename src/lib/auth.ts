@@ -66,6 +66,7 @@ export async function getSession(): Promise<Session | null> {
 
   const [user] = await db.select().from(users).where(eq(users.id, uid)).limit(1);
   if (!user || user.disabled) return null;
+  if (user.email.startsWith("demo-") && Date.now() - user.createdAt.getTime() > 24 * 60 * 60 * 1000) return null;
 
   const [m] = await db
     .select({

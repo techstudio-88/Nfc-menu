@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
+import { and, eq, lt, like } from "drizzle-orm";
 import { randomBytes } from "node:crypto";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { users, restaurants, restaurantMembers } from "@/db/schema";
 import { body, handle, HttpError } from "@/lib/api";
 import { endSession, getSession, hashPassword, homeFor, startSession, verifyPassword } from "@/lib/auth";
 import { loadStarterMenu, provisionRestaurant } from "@/lib/seed";
@@ -48,6 +48,11 @@ export const POST = handle(async (req, ctx) => {
   }
   if (action === "demo") {
     throttle(`demo:${ip}`);
+    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const expiredUsers = await db.select({ id: users.id }).from(users).where(and(like(users.email, "demo-%@tapmenu.invalid"), lt(users.createdAt, cutoff)));
+    const expiredRestaurants = await db.select({ id: restaurants.id }).from(restaurantMembers).innerJoin(restaurants, eq(restaurants.id, restaurantMembers.restaurantId)).where(and(like(restaurants.slug, "demo-%"), lt(restaurants.createdAt, cutoff)));
+    for (const restaurant of expiredRestaurants) await db.delete(restaurants).where(eq(restaurants.id, restaurant.id));
+    for (const user of expiredUsers) await db.delete(users).where(eq(users.id, user.id));
     const suffix = randomBytes(8).toString("hex");
     const email = `demo-${suffix}@tapmenu.invalid`;
     const password = randomBytes(32).toString("base64url");

@@ -454,3 +454,5 @@ main button:not(:disabled):active { transform:scale(.985); }
 @media (prefers-reduced-motion:reduce) {
   .tm-model-canvas,.tm-model-glow,.tm-orbit-one,.tm-orbit-two,.tm-live-dot { animation:none !important; }
 }
+
+.tm-shell{background:radial-gradient(ellipse at 5% 0%,rgba(105,20,42,.12),transparent 38%),#090708;min-height:100dvh}.tm-shell .gold-text{background:linear-gradient(100deg,#ffd9dc,#e45b70 48%,#9f2039);-webkit-background-clip:text;background-clip:text;color:transparent}.tm-shell .text-amber-200,.tm-shell .text-amber-300,.tm-shell .text-amber-400{color:#f08a96!important}.tm-shell .bg-amber-500\/15{background-color:rgba(190,45,65,.14)!important}.tm-shell .border-amber-500\/30{border-color:rgba(216,74,94,.3)!important}

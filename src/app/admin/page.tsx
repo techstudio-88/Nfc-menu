@@ -6,7 +6,7 @@ import { formatMoney } from "@/lib/pricing";
 import { Tabs, type Row } from "@/components/forms";
 import { Badge, Button, Card, Empty, ErrorState, Field, Input, Loading, Modal, PageHeader, Select, Stat, Textarea, Toggle, useAsync, useToast } from "@/components/ui";
 
-type Tab = "overview" | "restaurants" | "plans" | "payments" | "support" | "config";
+type Tab = "overview" | "access" | "restaurants" | "plans" | "payments" | "support" | "config";
 const get = (r: string) => api<any>(`/api/admin?r=${r}`);
 const post = (body: Row) => api("/api/admin", { body });
 
@@ -15,8 +15,9 @@ export default function Admin() {
   return (
     <div>
       <PageHeader title="Platform console" sub="Restaurants, subscriptions, revenue and support across TapMenu 3D." />
-      <Tabs value={tab} onChange={setTab} tabs={[{ id: "overview", label: "Overview" }, { id: "restaurants", label: "Restaurants" }, { id: "plans", label: "Plans" }, { id: "payments", label: "Payments" }, { id: "support", label: "Support" }, { id: "config", label: "Configuration" }]} />
+      <Tabs value={tab} onChange={setTab} tabs={[{ id: "overview", label: "Overview" }, { id: "access", label: "Access requests" }, { id: "restaurants", label: "Restaurants" }, { id: "plans", label: "Plans" }, { id: "payments", label: "Payments" }, { id: "support", label: "Support" }, { id: "config", label: "Configuration" }]} />
       {tab === "overview" && <Overview />}
+      {tab === "access" && <AccessRequests />}
       {tab === "restaurants" && <Restaurants />}
       {tab === "plans" && <Plans />}
       {tab === "payments" && <Payments />}
@@ -194,4 +195,17 @@ function Config() {
       <p className="text-xs text-neutral-500">Server-side secrets (Stripe, AI keys, AUTH_SECRET) are environment variables and are never shown here.</p>
     </Card>
   );
+}
+
+function AccessRequests() {
+  const toast = useToast();
+  const q = useAsync<any>(() => get("accessRequests"), []);
+  const [passwords,setPasswords] = useState<Record<string,string>>({});
+  const [slugs,setSlugs] = useState<Record<string,string>>({});
+  const [notes,setNotes] = useState<Record<string,string>>({});
+  if(q.loading&&!q.data)return <Loading/>;
+  if(q.error||!q.data)return <ErrorState message={q.error??"Failed"} retry={q.reload}/>;
+  const run=async(id:string,status:"approved"|"rejected")=>{try{const r:any=await post({action:"reviewAccessRequest",id,status,temporaryPassword:passwords[id]??"",slug:slugs[id]??"",adminNote:notes[id]??""});toast(status==="approved"?`Workspace created: ${r.restaurantSlug}. Share the temporary password securely with the owner.`:"Request rejected");q.reload(true);}catch(e){toast(e instanceof Error?e.message:"Could not process request","err");}};
+  if(!q.data.rows.length)return <Empty icon="✉️" title="No workspace requests" text="New restaurant access requests will appear here." />;
+  return <div className="space-y-4">{q.data.rows.map((r:any)=><Card key={r.id} className="space-y-3"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="font-display text-xl text-white">{r.restaurantName}</p><p className="text-sm text-neutral-400">{r.name} · {r.email}</p><p className="text-xs text-neutral-500">{r.phone} {r.city&&"· "+r.city} · {new Date(r.createdAt).toLocaleString()}</p></div><Badge tone={r.status==="pending"?"amber":r.status==="approved"?"green":"red"}>{r.status}</Badge></div>{r.message&&<p className="text-sm text-neutral-300">{r.message}</p>}{r.status==="pending"&&<div className="grid gap-3 sm:grid-cols-2"><Field label="Restaurant URL slug"><Input value={slugs[r.id]??r.restaurantName.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")} onChange={e=>setSlugs({...slugs,[r.id]:e.target.value})}/></Field><Field label="Temporary password (10+ chars)"><Input type="password" value={passwords[r.id]??""} onChange={e=>setPasswords({...passwords,[r.id]:e.target.value})}/></Field><Field label="Admin note"><Input value={notes[r.id]??""} onChange={e=>setNotes({...notes,[r.id]:e.target.value})}/></Field><div className="flex items-end gap-2"><Button variant="primary" disabled={(passwords[r.id]??"").length<10} onClick={()=>run(r.id,"approved")}>Approve & create workspace</Button><Button variant="danger" onClick={()=>run(r.id,"rejected")}>Reject</Button></div></div>}{r.status!=="pending"&&r.adminNote&&<p className="text-xs text-neutral-500">Admin note: {r.adminNote}</p>}</Card>)}</div>;
 }

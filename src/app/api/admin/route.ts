@@ -2,7 +2,8 @@ import { desc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import * as S from "@/db/schema";
 import { body, handle, HttpError, isUuid } from "@/lib/api";
-import { requirePlatformAdmin } from "@/lib/auth";
+import { hashPassword, requirePlatformAdmin } from "@/lib/auth";
+import { loadStarterMenu, provisionRestaurant } from "@/lib/seed";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,7 @@ export const GET = handle(async (req) => {
     return { rows };
   }
   if (r === "plans") return { rows: await db.select().from(S.subscriptionPlans).orderBy(S.subscriptionPlans.priceCents) };
+  if (r === "accessRequests") return { rows: await db.select().from(S.workspaceAccessRequests).orderBy(desc(S.workspaceAccessRequests.createdAt)).limit(200) };
   if (r === "support") {
     const rows = await db
       .select({ id: S.supportRequests.id, subject: S.supportRequests.subject, message: S.supportRequests.message, status: S.supportRequests.status, reply: S.supportRequests.reply, createdAt: S.supportRequests.createdAt, restaurant: S.restaurants.name })
@@ -79,6 +81,37 @@ export const POST = handle(async (req) => {
   const b = await body<Record<string, unknown>>(req);
   const rid = b.restaurantId;
   switch (b.action) {
+    case "reviewAccessRequest": {
+      if (!isUuid(b.id)) throw new HttpError(400, "Invalid access request.");
+      const [request] = await db.select().from(S.workspaceAccessRequests).where(eq(S.workspaceAccessRequests.id, b.id)).limit(1);
+      if (!request) throw new HttpError(404, "Access request not found.");
+      if (request.status !== "pending") throw new HttpError(409, "This request has already been reviewed.");
+      const status = String(b.status);
+      if (status === "rejected") {
+        await db.update(S.workspaceAccessRequests).set({ status: "rejected", adminNote: String(b.adminNote ?? "").slice(0,1000), reviewedAt: new Date() }).where(eq(S.workspaceAccessRequests.id, request.id));
+        return { ok: true };
+      }
+      if (status !== "approved") throw new HttpError(400, "Choose approve or reject.");
+      const password = String(b.temporaryPassword ?? "");
+      if (password.length < 10) throw new HttpError(400, "Set a temporary password of at least 10 characters.");
+      const email = request.email.trim().toLowerCase();
+      const [existing] = await db.select({ id: S.users.id }).from(S.users).where(eq(S.users.email, email)).limit(1);
+      if (existing) throw new HttpError(409, "An account already exists for this email. Use the existing login or a different email.");
+      const [u] = await db.insert(S.users).values({ email, name: request.name, passwordHash: hashPassword(password) }).returning();
+      let createdRestaurantId: string | null = null;
+      try {
+        const slug = String(b.slug ?? request.restaurantName).trim();
+        const restaurant = await provisionRestaurant({ ownerId: u.id, name: request.restaurantName, slug });
+        createdRestaurantId = restaurant.id;
+        await loadStarterMenu(restaurant.id);
+        await db.update(S.workspaceAccessRequests).set({ status: "approved", adminNote: String(b.adminNote ?? "").slice(0,1000), reviewedAt: new Date() }).where(eq(S.workspaceAccessRequests.id, request.id));
+        return { ok: true, email, restaurantSlug: restaurant.slug };
+      } catch (error) {
+        if (createdRestaurantId) await db.delete(S.restaurants).where(eq(S.restaurants.id, createdRestaurantId));
+        await db.delete(S.users).where(eq(S.users.id, u.id));
+        throw error;
+      }
+    }
     case "setStatus": {
       if (!isUuid(rid) || !["active", "suspended"].includes(String(b.status))) throw new HttpError(400, "Invalid request.");
       await db.update(S.restaurants).set({ status: String(b.status) }).where(eq(S.restaurants.id, rid));

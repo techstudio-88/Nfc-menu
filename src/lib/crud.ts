@@ -23,6 +23,7 @@ const bool: Field = { t: "bool" };
 const uuid = (ref?: string, req = false): Field => ({ t: "uuid", ref, req });
 
 export const RESOURCES: Record<string, Res> = {
+  inventory: { table: S.inventoryItems, fields: { name: str(true,120), unit: str(true,20), stock: int(0,100000000), lowStockAt: int(0,100000000), costPerUnit: int(0,100000000), active: bool }, order: [asc(S.inventoryItems.name)] },
   stations: { table: S.kitchenStations, fields: { name: str(true, 60), sort: int(0, 999), active: bool }, order: [asc(S.kitchenStations.sort), asc(S.kitchenStations.name)] },
   categories: {
     table: S.menuCategories,
