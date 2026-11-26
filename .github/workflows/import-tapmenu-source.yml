@@ -1,0 +1,34 @@
+name: Import TapMenu source archive
+
+on:
+  push:
+    paths:
+      - "tapmenu-source.tar.xz"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unpack-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - name: Extract application source
+        run: |
+          test -f tapmenu-source.tar.xz
+          mkdir -p /tmp/tapmenu-source
+          tar -xJf tapmenu-source.tar.xz -C /tmp/tapmenu-source
+          rsync -a --exclude=.git /tmp/tapmenu-source/ ./
+          rm -f tapmenu-source.tar.xz
+      - name: Commit extracted source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Import TapMenu 3D application source"
+          git push origin HEAD:main
