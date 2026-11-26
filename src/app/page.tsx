@@ -1,11 +1,27 @@
 import Link from "next/link";
+import Hero3D from "@/components/landing/Hero3D";
+
+function LineIcon({ name, className = "" }: { name: string; className?: string }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const paths: Record<string, React.ReactNode> = {
+    spark: <><path d="M12 2.8 14.4 9.6 21.2 12l-6.8 2.4L12 21.2l-2.4-6.8L2.8 12l6.8-2.4L12 2.8Z"/><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z"/></>,
+    leaf: <><path d="M20.5 3.5C11 3.5 5 6.6 5 13a6 6 0 0 0 6 6c6.4 0 9.5-6 9.5-15.5Z"/><path d="M4 21c3.2-5 7.2-8.7 12-11"/></>,
+    plate: <><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.2"/><path d="M3 4v5M1.5 6.5h3M21 4v7M19.5 11h3"/></>,
+    layers: <><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></>,
+    sliders: <><path d="M4 7h9m4 0h3M4 17h3m4 0h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></>,
+    nfc: <><path d="M5 8a6 6 0 0 1 0 8M8 5a10 10 0 0 1 0 14M11 2a14 14 0 0 1 0 20"/><rect x="14" y="7" width="7" height="10" rx="1.5"/></>,
+    bolt: <><path d="m13 2-9 12h7l-1 8 10-13h-7l1-7Z"/></>,
+    chef: <><path d="M6 11a4 4 0 1 1 7.5-2A4.5 4.5 0 1 1 19 14v5H6v-8Z"/><path d="M9 19v2h9v-2"/></>
+  };
+  return <svg viewBox="0 0 24 24" aria-hidden="true" className={className} {...common}>{paths[name] ?? paths.spark}</svg>;
+}
 
 export const dynamic = "force-dynamic";
 
 const highlights = [
-  { icon: "✳", title: "LOCALLY SOURCED", body: "Fresh ingredients, beautifully presented and easy to explore." },
-  { icon: "♧", title: "CULINARY ARTISTRY", body: "Every dish deserves its own moment in the spotlight." },
-  { icon: "♜", title: "A BETTER TABLE", body: "A seamless experience from the first tap to the final bite." },
+  { icon: "leaf", title: "LOCALLY SOURCED", body: "Fresh ingredients, beautifully presented and easy to explore." },
+  { icon: "spark", title: "CULINARY ARTISTRY", body: "Every dish deserves its own moment in the spotlight." },
+  { icon: "plate", title: "A BETTER TABLE", body: "A seamless experience from the first tap to the final bite." },
 ];
 const features = [
   ["01", "A menu worth looking at", "Bring dishes to life with rich photography and interactive 3D previews. Let guests explore every detail before they order."],
@@ -50,7 +66,7 @@ export default function Home() {
           <div className="senso-frame relative mx-auto flex min-h-[min(82vh,850px)] w-full max-w-[1440px] flex-col overflow-hidden">
             <div className="senso-hero relative flex flex-1 items-center overflow-hidden px-6 pb-12 pt-12 sm:px-10 lg:px-14 lg:py-12">
               <div className="senso-dish-photo" role="img" aria-label="Fine dining dish served on a ceramic plate" />
-              <div className="senso-photo-shade" />
+              <div className="senso-photo-shade" />\n              <div className="tm-hero-model" aria-label="Interactive three-dimensional pizza preview"><div className="tm-model-orbit tm-orbit-one" /><div className="tm-model-orbit tm-orbit-two" /><div className="tm-model-glow" /><div className="tm-model-canvas"><Hero3D /></div><div className="tm-model-caption"><span className="tm-live-dot" /> LIVE 3D PREVIEW <span className="tm-caption-divider" /> ROTATE & EXPLORE</div></div>
               <div className="relative z-10 max-w-[490px] py-10 lg:py-14">
                 <p className="mb-5 text-[9px] font-semibold tracking-[.18em] text-[#e56a70] sm:text-[10px]">THE NEXT CHAPTER OF DINING</p>
                 <h1 className="senso-heading text-[3.4rem] leading-[.99] tracking-[-.045em] sm:text-6xl lg:text-[4.6rem]">Every Table.<br /><em>Something Special.</em></h1>
@@ -64,7 +80,7 @@ export default function Home() {
             </div>
             <section className="senso-highlights grid grid-cols-1 border-t border-white/[.12] sm:grid-cols-3">
               {highlights.map((item, i) => <div key={item.title} className={`flex items-center gap-5 px-7 py-6 sm:px-8 lg:px-10 ${i ? "border-t border-white/[.10] sm:border-l sm:border-t-0" : ""}`}>
-                <span className="senso-line-icon flex h-10 w-10 shrink-0 items-center justify-center text-[27px] text-[#c94b55]">{item.icon}</span>
+                <span className="senso-line-icon flex h-10 w-10 shrink-0 items-center justify-center text-[#e35a69]"><LineIcon name={item.icon} className="h-[19px] w-[19px]" /></span>
                 <div><p className="text-[9px] font-semibold tracking-[.13em] text-[#e4c9c5]">{item.title}</p><p className="mt-2 max-w-[220px] text-[10px] leading-[1.7] text-white/45">{item.body}</p></div>
               </div>)}
             </section>
@@ -74,7 +90,7 @@ export default function Home() {
         <section id="experience" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32">
           <p className="text-[10px] tracking-[.25em] text-[#e56a70]">01 — THE GUEST EXPERIENCE</p>
           <div className="mt-5 grid gap-7 md:grid-cols-[1.1fr_.9fr] md:items-end"><h2 className="senso-heading text-5xl leading-[1.02] sm:text-7xl">A menu that feels<br /><em>like an invitation.</em></h2><p className="max-w-lg text-sm leading-7 text-white/50">Paper menus show a list. TapMenu creates a moment. Give every guest the freedom to discover dishes, understand every option and order at their own pace.</p></div>
-          <div className="mt-14 grid gap-4 sm:grid-cols-2">{features.map(([n,t,d])=><article key={n} className="senso-section-card group min-h-[220px] p-7 sm:p-9"><div className="flex items-center justify-between"><span className="senso-heading text-4xl text-white/20">{n}</span><span className="text-xl text-[#d0525d] transition group-hover:rotate-45">✳</span></div><h3 className="senso-heading mt-9 text-3xl">{t}</h3><p className="mt-3 max-w-lg text-xs leading-6 text-white/48">{d}</p></article>)}</div>
+          <div className="mt-14 grid gap-4 sm:grid-cols-2">{features.map(([n,t,d])=><article key={n} className="senso-section-card group min-h-[220px] p-7 sm:p-9"><div className="flex items-center justify-between"><span className="senso-heading text-4xl text-white/20">{n}</span><span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d94b5d]/25 bg-[#a72b40]/10 text-[#ed7884] transition group-hover:rotate-45 group-hover:shadow-[0_0_24px_rgba(215,63,85,.22)]"><LineIcon name={n === "01" ? "spark" : n === "02" ? "sliders" : n === "03" ? "nfc" : "bolt"} className="h-5 w-5" /></span></div><h3 className="senso-heading mt-9 text-3xl">{t}</h3><p className="mt-3 max-w-lg text-xs leading-6 text-white/48">{d}</p></article>)}</div>
         </section>
 
         <section id="platform" className="border-y border-white/[.09] bg-[#12090a]/90 px-5 py-24 sm:px-8 sm:py-32">
@@ -86,7 +102,7 @@ export default function Home() {
 
         <section id="how" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32">
           <p className="text-[10px] tracking-[.25em] text-[#e56a70]">03 — AS EASY AS A TAP</p><h2 className="senso-heading mt-5 text-5xl sm:text-7xl">Four steps to <em>delight.</em></h2>
-          <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{steps.map(([n,t,d])=><div key={n} className="senso-step p-7"><span className="senso-heading text-5xl text-[#d0525d]">{n}</span><h3 className="senso-heading mt-10 text-3xl">{t}</h3><p className="mt-3 text-xs leading-6 text-white/45">{d}</p></div>)}</div>
+          <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{steps.map(([n,t,d])=><div key={n} className="senso-step p-7"><span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#d94b5d]/25 bg-[#a72b40]/10 text-[#ed7884]"><LineIcon name={n === "01" ? "nfc" : n === "02" ? "spark" : n === "03" ? "sliders" : "chef"} className="h-6 w-6" /></span><span className="ml-auto font-mono text-xs tracking-[.18em] text-white/25">{n}</span><h3 className="senso-heading mt-10 text-3xl">{t}</h3><p className="mt-3 text-xs leading-6 text-white/45">{d}</p></div>)}</div>
           <div className="mt-14 flex flex-col items-start justify-between gap-6 border-y border-white/10 py-8 sm:flex-row sm:items-center"><div><p className="text-[9px] tracking-[.2em] text-[#df7075]">NO APP DOWNLOAD REQUIRED</p><p className="senso-heading mt-2 text-3xl">One tap. Straight to your menu.</p></div><Link href={demo ? "/r/ember-crust?table=T04" : "/signup"} className="senso-red-button px-6 py-4 text-[9px] tracking-[.1em]">TRY THE DEMO MENU ↗</Link></div>
         </section>
 
