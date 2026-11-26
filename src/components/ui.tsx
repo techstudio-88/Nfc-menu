@@ -214,7 +214,7 @@ export function Modal({ open, onClose, title, children, wide }: { open: boolean;
 
 export function Stat({ label, value, sub, accent }: { label: string; value: ReactNode; sub?: string; accent?: boolean }) {
   return (
-    <div className={cx("rounded-2xl border p-5", accent ? "border-amber-500/30 bg-gradient-to-br from-amber-500/15 to-orange-600/5" : "border-white/10 bg-neutral-900/60")}>
+    <div className={cx("tm-card rounded-2xl border p-5", accent ? "border-rose-500/30 bg-gradient-to-br from-rose-600/20 to-red-950/20" : "border-white/10 bg-neutral-900/60")}>
       <p className="text-xs uppercase tracking-wider text-neutral-400">{label}</p>
       <p className="mt-2 font-display text-3xl text-white">{value}</p>
       {sub && <p className="mt-1 text-xs text-neutral-500">{sub}</p>}
