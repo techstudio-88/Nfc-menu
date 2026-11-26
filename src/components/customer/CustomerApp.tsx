@@ -45,6 +45,8 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
   const [assistMsg, setAssistMsg] = useState("");
   const [manualTable, setManualTable] = useState("");
   const [lastOrder, setLastOrder] = useState<string | null>(null);
+  const [exitReviewOpen, setExitReviewOpen] = useState(false);
+  const exitPromptShown = useRef(false);
   const hydrated = useRef(false);
 
   /* settings & persistence */
@@ -102,6 +104,21 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
       document.removeEventListener("visibilitychange", v);
     };
   }, [load]);
+
+  useEffect(() => {
+    if (!data || typeof window === "undefined") return;
+    // Browsers do not expose a dependable app-close event. Trap the first
+    // browser Back action, show the review invitation, then allow the next Back.
+    window.history.pushState({ tapmenuExitGuard: true }, "", window.location.href);
+    const onPopState = () => {
+      if (exitPromptShown.current) return;
+      exitPromptShown.current = true;
+      setExitReviewOpen(true);
+      window.history.pushState({ tapmenuExitGuard: true }, "", window.location.href);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [data?.restaurant.slug]);
 
   useEffect(() => {
     if (!data) return;
@@ -197,6 +214,21 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
 
   return (
     <div style={style} data-lite={lite ? "1" : "0"} className="c-bg c-fg relative min-h-dvh overflow-x-clip pb-32">
+      <AnimatePresence>
+        {exitReviewOpen && data && (
+          <motion.div className="fixed inset-0 z-[120] grid place-items-center bg-black/75 p-5 backdrop-blur-xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div role="dialog" aria-modal="true" aria-labelledby="exit-review-title" initial={{ opacity: 0, y: 22, scale: .96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 12, scale: .98 }} className="w-full max-w-sm overflow-hidden rounded-[2rem] border border-rose-300/20 bg-[#160b10] p-7 text-center shadow-[0_24px_90px_rgba(0,0,0,.65),0_0_55px_rgba(190,35,65,.16)]">
+              <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-rose-300/20 bg-rose-500/10 text-2xl text-rose-200">♥</div>
+              <p className="mt-5 text-[10px] font-semibold tracking-[.24em] text-rose-300">BEFORE YOU GO</p>
+              <h2 id="exit-review-title" className="mt-3 font-display text-3xl text-white">Enjoyed {data.restaurant.name}?</h2>
+              <p className="mt-3 text-sm leading-6 text-rose-50/60">A quick Google review helps this restaurant grow and helps other guests discover it.</p>
+              <a href={`https://www.google.com/search?q=${encodeURIComponent(`${data.restaurant.name} Google reviews`)}`} target="_blank" rel="noopener noreferrer" onClick={() => { setExitReviewOpen(false); window.history.back(); }} className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-to-r from-rose-600 to-red-800 px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_28px_rgba(190,35,65,.28)] transition hover:brightness-110">Rate on Google ↗</a>
+              <button onClick={() => { setExitReviewOpen(false); window.history.back(); }} className="mt-3 w-full rounded-full border border-white/10 px-5 py-3 text-sm text-white/60 transition hover:bg-white/5 hover:text-white">Not now · close menu</button>
+              <p className="mt-4 text-[10px] tracking-wide text-white/30">You can leave anytime. We won’t ask again this visit.</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {showIntro && !introDone && <Intro key="intro" data={data} T={T} table={tableCode} lite={lite} onSkip={() => data && setMinIntro(true)} />}
       </AnimatePresence>
