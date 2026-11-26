@@ -720,10 +720,20 @@ function CartDrawer({
                 </div>
               </div>
 
-              {!tableCode && (
+              {data.table?.status !== "ok" && (
                 <label className="block">
                   <span className="c-muted text-[11px] uppercase tracking-[0.2em]">{T.needTable}</span>
-                  <input value={manualTable} onChange={(e) => onTable(e.target.value)} placeholder="T04" className="mt-1.5 w-full rounded-full border c-line bg-transparent px-4 py-2.5 text-sm uppercase outline-none" />
+                  <input
+                    type="text"
+                    inputMode="text"
+                    autoComplete="off"
+                    autoCapitalize="characters"
+                    enterKeyHint="done"
+                    value={manualTable}
+                    onChange={(e) => onTable(e.target.value)}
+                    placeholder="T04"
+                    className="mt-1.5 w-full rounded-full border c-line bg-transparent px-4 py-2.5 text-sm uppercase outline-none"
+                  />
                 </label>
               )}
 
