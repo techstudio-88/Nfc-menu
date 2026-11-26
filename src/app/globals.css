@@ -132,3 +132,42 @@ body {
   .senso-dish-photo { inset:0; background-position:62% center; opacity:.72; -webkit-mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.8) 38%,transparent 100%); mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.8) 38%,transparent 100%); }
   .senso-photo-shade { background:linear-gradient(0deg,#0c0b0a 0%,rgba(12,11,10,.85) 27%,rgba(12,11,10,.08) 100%); }
 }
+
+
+/* TapMenu crimson-luxe theme: retain the editorial restaurant layout, restore brand red */
+.senso-page { background:#080607; }
+.senso-nav { background:rgba(8,6,7,.82); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+.senso-backdrop {
+  background-image:linear-gradient(90deg,rgba(5,3,4,.54),rgba(5,3,4,.3)),url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=2200&q=90");
+  filter:brightness(.42) saturate(.9);
+}
+.senso-frame { border-color:rgba(173,61,69,.38); background:rgba(12,9,10,.88); }
+.senso-gold-button,.senso-red-button {
+  display:inline-flex; align-items:center; justify-content:center; min-height:38px;
+  color:#fff4f1; background:linear-gradient(135deg,#b8323e,#7f1724);
+  border:1px solid rgba(239,117,123,.42);
+  box-shadow:inset 0 1px rgba(255,255,255,.15),0 8px 28px rgba(105,14,28,.28);
+  transition:filter .25s,transform .25s,box-shadow .25s;
+}
+.senso-gold-button:hover,.senso-red-button:hover { filter:brightness(1.18); transform:translateY(-2px); box-shadow:0 12px 34px rgba(155,25,42,.38); }
+.senso-outline-button { display:inline-flex; align-items:center; justify-content:center; min-height:38px; border:1px solid rgba(231,183,178,.35); color:#f0dedb; transition:background .25s,border-color .25s; }
+.senso-outline-button:hover { background:rgba(180,45,58,.16); border-color:rgba(231,120,126,.7); }
+.senso-heading em { color:#e7c7c2; }
+.senso-section-card,.senso-step {
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(36,19,21,.76),rgba(13,10,11,.78));
+  box-shadow:inset 0 1px rgba(255,255,255,.025);
+  transition:transform .35s,border-color .35s,background .35s;
+}
+.senso-section-card:hover,.senso-step:hover { transform:translateY(-4px); border-color:rgba(205,77,87,.42); background:linear-gradient(145deg,rgba(54,23,27,.82),rgba(16,10,12,.84)); }
+.senso-dish-photo {
+  background-image:url("https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1800&q=92");
+  filter:saturate(1.08) contrast(1.04);
+}
+.senso-photo-shade { background:linear-gradient(90deg,#0c090a 0%,rgba(12,9,10,.96) 19%,rgba(12,9,10,.62) 39%,rgba(12,9,10,.02) 76%),linear-gradient(0deg,rgba(0,0,0,.36),transparent 40%); }
+.senso-highlights { background:rgba(10,7,8,.97); }
+@media (prefers-reduced-motion:no-preference) {
+  .senso-dish-photo { animation:senso-image-drift 22s ease-in-out infinite alternate; }
+  @keyframes senso-image-drift { from { transform:scale(1); } to { transform:scale(1.055); } }
+}
