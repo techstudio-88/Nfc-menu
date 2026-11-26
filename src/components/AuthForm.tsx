@@ -77,7 +77,7 @@ export function AuthForm({ mode, demo }: { mode: "login" | "signup"; demo: boole
           </Button>
           <p className="mt-3 text-center text-[11px] leading-5 text-neutral-500">A private sample restaurant is created for this demo session. Your changes won't affect anyone else's demo.</p>
         </div>
-      )}}
+      )}
     </div>
   );
 }
