@@ -456,3 +456,88 @@ main button:not(:disabled):active { transform:scale(.985); }
 }
 
 .tm-shell{background:radial-gradient(ellipse at 5% 0%,rgba(105,20,42,.12),transparent 38%),#090708;min-height:100dvh}.tm-shell .gold-text{background:linear-gradient(100deg,#ffd9dc,#e45b70 48%,#9f2039);-webkit-background-clip:text;background-clip:text;color:transparent}.tm-shell .text-amber-200,.tm-shell .text-amber-300,.tm-shell .text-amber-400{color:#f08a96!important}.tm-shell .bg-amber-500\/15{background-color:rgba(190,45,65,.14)!important}.tm-shell .border-amber-500\/30{border-color:rgba(216,74,94,.3)!important}
+
+
+/* ── Global TapMenu visual system: one ruby accent across every workspace ── */
+:root {
+  --tm-brand: #d94358;
+  --tm-brand-strong: #f07883;
+  --tm-brand-deep: #74172a;
+  --tm-brand-soft: rgba(217,67,88,.14);
+  --tm-brand-line: rgba(217,67,88,.34);
+  --tm-brand-glow: 0 0 28px rgba(217,67,88,.18);
+}
+body {
+  background-color:#090708;
+  background-image:radial-gradient(ellipse at 8% 0%,rgba(116,23,42,.16),transparent 38%),radial-gradient(ellipse at 94% 18%,rgba(217,67,88,.055),transparent 32%);
+}
+.tm-shell {
+  --brand:var(--tm-brand);
+  --accent:var(--tm-brand-strong);
+  --primary:var(--tm-brand);
+  --ring:var(--tm-brand);
+  color-scheme:dark;
+}
+.tm-shell .gold-text,
+.tm-shell [class*="text-amber-"],
+.tm-shell [class*="text-yellow-"],
+.tm-shell [class*="text-orange-"] { color:var(--tm-brand-strong)!important; }
+.tm-shell [class*="bg-amber-"],
+.tm-shell [class*="bg-yellow-"],
+.tm-shell [class*="bg-orange-"] { background-color:var(--tm-brand-soft)!important; }
+.tm-shell [class*="border-amber-"],
+.tm-shell [class*="border-yellow-"],
+.tm-shell [class*="border-orange-"] { border-color:var(--tm-brand-line)!important; }
+.tm-shell [class*="ring-amber-"],
+.tm-shell [class*="ring-yellow-"],
+.tm-shell [class*="ring-orange-"] { --tw-ring-color:var(--tm-brand)!important; }
+.tm-shell button:not(:disabled),
+.tm-shell a[role="button"],
+.tm-shell [data-slot="button"] {
+  transition:transform .24s cubic-bezier(.2,.8,.2,1),box-shadow .28s ease,border-color .28s ease,background-color .28s ease,filter .28s ease;
+}
+.tm-shell button:not(:disabled):hover,
+.tm-shell a[role="button"]:hover,
+.tm-shell [data-slot="button"]:hover {
+  transform:translateY(-2px);
+  box-shadow:0 8px 25px rgba(217,67,88,.15);
+}
+.tm-shell button:active,
+.tm-shell a[role="button"]:active { transform:translateY(0) scale(.985); }
+.tm-shell :is(input,select,textarea):focus-visible {
+  outline:2px solid rgba(217,67,88,.72);
+  outline-offset:2px;
+  box-shadow:0 0 0 4px rgba(217,67,88,.10);
+}
+.tm-shell :is([class*="rounded-xl"],[class*="rounded-2xl"],[class*="rounded-3xl"]):not(button) {
+  transition:border-color .3s ease,box-shadow .3s ease,background-color .3s ease;
+}
+@media (prefers-reduced-motion:no-preference) {
+  .tm-shell main { animation:tm-page-enter .65s cubic-bezier(.2,.8,.2,1) both; }
+  .tm-shell main > header,
+  .tm-shell main > section,
+  .tm-shell main > [data-animate="section"] {
+    animation:tm-section-enter .7s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .tm-shell main > :nth-child(2) { animation-delay:.05s; }
+  .tm-shell main > :nth-child(3) { animation-delay:.1s; }
+  .tm-shell main > :nth-child(4) { animation-delay:.15s; }
+  .tm-shell main > :nth-child(5) { animation-delay:.2s; }
+  .tm-shell [class*="animate-"] { animation-duration:.55s; }
+  .tm-shell [class*="shadow-amber"],
+  .tm-shell [class*="shadow-yellow"],
+  .tm-shell [class*="shadow-orange"] { --tw-shadow-color:rgba(217,67,88,.18)!important; }
+  .tm-shell aside { transition:background-color .3s ease,border-color .3s ease; }
+}
+@keyframes tm-page-enter {
+  from { opacity:0; transform:translateY(8px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@keyframes tm-section-enter {
+  from { opacity:0; transform:translateY(13px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .tm-shell main,.tm-shell main > header,.tm-shell main > section,
+  .tm-shell main > [data-animate="section"] { animation:none!important; }
+}
