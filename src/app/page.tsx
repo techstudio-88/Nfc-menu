@@ -16,7 +16,7 @@ export default function Home() {
       <div className="relative z-10 flex min-h-[100svh] items-center justify-center px-3 py-5 sm:px-7 sm:py-8 lg:px-12">
         <div className="senso-frame relative flex min-h-[min(82vh,850px)] w-full max-w-[1440px] flex-col overflow-hidden">
           <header className="relative z-20 flex items-center justify-between gap-4 px-6 py-6 sm:px-10 lg:px-14 lg:py-7">
-            <Link href="/" className="senso-wordmark text-2xl tracking-[.28em] sm:text-[1.65rem]">SENSO</Link>
+            <Link href="/" className="senso-wordmark text-2xl tracking-[.28em] sm:text-[1.65rem]">TAPMENU</Link>
             <nav className="hidden items-center gap-7 text-[9px] font-medium tracking-[.12em] text-white/65 lg:flex xl:gap-10">
               <a href="#home" className="transition hover:text-[#d8ad6a]">HOME</a>
               <a href="#about" className="transition hover:text-[#d8ad6a]">ABOUT</a>
