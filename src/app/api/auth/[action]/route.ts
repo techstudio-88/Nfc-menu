@@ -1,9 +1,10 @@
 import { eq } from "drizzle-orm";
+import { randomBytes } from "node:crypto";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { body, handle, HttpError } from "@/lib/api";
 import { endSession, getSession, hashPassword, homeFor, startSession, verifyPassword } from "@/lib/auth";
-import { ensureDemo, provisionRestaurant } from "@/lib/seed";
+import { loadStarterMenu, provisionRestaurant } from "@/lib/seed";
 
 const attempts = new Map<string, { n: number; reset: number }>();
 function throttle(key: string) {
@@ -34,7 +35,6 @@ export const POST = handle(async (req, ctx) => {
   const b = await body<Record<string, string>>(req);
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0] ?? "local";
   if (action === "login") {
-    await ensureDemo();
     const email = String(b.email ?? "").trim().toLowerCase();
     throttle(`login:${ip}:${email}`);
     const [u] = await db.select().from(users).where(eq(users.email, email)).limit(1);
@@ -44,6 +44,25 @@ export const POST = handle(async (req, ctx) => {
     return { ok: true, home: s ? homeFor(s) : "/dashboard" };
   }
   if (action === "signup") {
+    throw new HttpError(403, "Workspace creation is invite-only. Email techstudio7808@gmail.com to request access.");
+  }
+  if (action === "demo") {
+    throttle(`demo:${ip}`);
+    const suffix = randomBytes(8).toString("hex");
+    const email = `demo-${suffix}@tapmenu.invalid`;
+    const password = randomBytes(32).toString("base64url");
+    const [u] = await db.insert(users).values({ email, name: "TapMenu Demo Guest", passwordHash: hashPassword(password) }).returning();
+    try {
+      const restaurant = await provisionRestaurant({ ownerId: u.id, name: `Demo Restaurant ${suffix.slice(0, 4).toUpperCase()}`, slug: `demo-${suffix}` });
+      await loadStarterMenu(restaurant.id);
+      await startSession(u.id);
+      return { ok: true, home: "/dashboard", demo: true, restaurant: restaurant.name };
+    } catch (e) {
+      await db.delete(users).where(eq(users.id, u.id));
+      throw e;
+    }
+  }
+  if (false && action === "signup") {
     throttle(`signup:${ip}`);
     const email = String(b.email ?? "").trim().toLowerCase();
     if (!/^\S+@\S+\.\S+$/.test(email)) throw new HttpError(400, "Enter a valid email address.");
