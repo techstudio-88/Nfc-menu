@@ -62,27 +62,5 @@ export const POST = handle(async (req, ctx) => {
       throw e;
     }
   }
-  if (false && action === "signup") {
-    throttle(`signup:${ip}`);
-    const email = String(b.email ?? "").trim().toLowerCase();
-    if (!/^\S+@\S+\.\S+$/.test(email)) throw new HttpError(400, "Enter a valid email address.");
-    if (String(b.password ?? "").length < 8) throw new HttpError(400, "Password must be at least 8 characters.");
-    if (!String(b.restaurantName ?? "").trim()) throw new HttpError(400, "Restaurant name is required.");
-    const [ex] = await db.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
-    if (ex) throw new HttpError(409, "An account with that email already exists.");
-    const [u] = await db
-      .insert(users)
-      .values({ email, name: String(b.name ?? "").trim() || email, passwordHash: hashPassword(b.password) })
-      .returning();
-    try {
-      const slug = b.slug || b.restaurantName;
-      const r = await provisionRestaurant({ ownerId: u.id, name: b.restaurantName.trim(), slug });
-      await startSession(u.id);
-      return { ok: true, home: "/dashboard", slug: r.slug };
-    } catch (e) {
-      await db.delete(users).where(eq(users.id, u.id));
-      throw e;
-    }
-  }
   throw new HttpError(404, "Not found");
 });
