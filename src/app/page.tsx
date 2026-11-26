@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import Hero3D from "@/components/landing/Hero3D";
 
 function LineIcon({ name, className = "" }: { name: string; className?: string }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -67,8 +66,7 @@ export default function Home() {
           <div className="senso-frame relative mx-auto flex min-h-[min(82vh,850px)] w-full max-w-[1440px] flex-col overflow-hidden">
             <div className="senso-hero relative flex flex-1 items-center overflow-hidden px-6 pb-12 pt-12 sm:px-10 lg:px-14 lg:py-12">
               <div className="senso-dish-photo" role="img" aria-label="Fine dining dish served on a ceramic plate" />
-              <div className="senso-photo-shade" />\n              <div className="tm-hero-model" aria-label="Interactive three-dimensional pizza preview"><div className="tm-model-orbit tm-orbit-one" /><div className="tm-model-orbit tm-orbit-two" /><div className="tm-model-glow" /><div className="tm-model-canvas"><Hero3D /></div><div className="tm-model-caption"><span className="tm-live-dot" /> LIVE 3D PREVIEW <span className="tm-caption-divider" /> ROTATE & EXPLORE</div></div>
-              <div className="relative z-10 max-w-[490px] py-10 lg:py-14">
+              <div className="senso-photo-shade" />\n              <div className="relative z-10 max-w-[490px] py-10 lg:py-14">
                 <p className="mb-5 text-[9px] font-semibold tracking-[.18em] text-[#e56a70] sm:text-[10px]">THE NEXT CHAPTER OF DINING</p>
                 <h1 className="senso-heading text-[3.4rem] leading-[.99] tracking-[-.045em] sm:text-6xl lg:text-[4.6rem]">Every Table.<br /><em>Something Special.</em></h1>
                 <p className="mt-7 max-w-[360px] text-[12px] leading-[1.95] text-[#c8c2b9]/75 sm:text-[13px]">A simple tap opens a world of flavour. Give your guests a beautifully branded digital menu, interactive 3D dishes and a smoother way to order.</p>
