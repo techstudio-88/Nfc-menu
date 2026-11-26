@@ -1,9 +1,10 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import Hero3D from "@/components/landing/Hero3D";
 
 function LineIcon({ name, className = "" }: { name: string; className?: string }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
-  const paths: Record<string, React.ReactNode> = {
+  const paths: Record<string, ReactNode> = {
     spark: <><path d="M12 2.8 14.4 9.6 21.2 12l-6.8 2.4L12 21.2l-2.4-6.8L2.8 12l6.8-2.4L12 2.8Z"/><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z"/></>,
     leaf: <><path d="M20.5 3.5C11 3.5 5 6.6 5 13a6 6 0 0 0 6 6c6.4 0 9.5-6 9.5-15.5Z"/><path d="M4 21c3.2-5 7.2-8.7 12-11"/></>,
     plate: <><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.2"/><path d="M3 4v5M1.5 6.5h3M21 4v7M19.5 11h3"/></>,
