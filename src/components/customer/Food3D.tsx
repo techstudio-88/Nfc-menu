@@ -62,7 +62,20 @@ function Pizza({ has }: { has: Has }) {
   );
   return (
     <group>
-      <mesh position-y={0.05}>
+      {/* Hand-finished ceramic plate: layered rim, foot ring and subtle glaze */}
+      <mesh position-y={-0.045} castShadow receiveShadow>
+        <cylinderGeometry args={[1.22, 1.18, 0.075, 96]} />
+        <meshPhysicalMaterial color="#e9e0d2" roughness={0.19} metalness={0.03} clearcoat={0.7} clearcoatRoughness={0.16} />
+      </mesh>
+      <mesh position-y={-0.004} rotation-x={Math.PI / 2}>
+        <torusGeometry args={[1.08, 0.025, 12, 96]} />
+        <meshStandardMaterial color="#b99b72" roughness={0.32} metalness={0.28} />
+      </mesh>
+      <mesh position-y={0.005}>
+        <cylinderGeometry args={[1.04, 1.04, 0.012, 96]} />
+        <meshStandardMaterial color="#f3ece1" roughness={0.24} />
+      </mesh>
+      <mesh position-y={0.05} castShadow receiveShadow>
         <cylinderGeometry args={[1, 1, thin ? 0.06 : 0.1, 56]} />
         <M c="#d9a05b" r={0.9} />
       </mesh>
@@ -370,12 +383,15 @@ export default function Food3D({
   const has = useMemo<Has>(() => (k) => set.has(k), [set]);
   return (
     <Canvas dpr={lite ? 1 : [1, 1.8]} frameloop={lite ? "demand" : "always"} camera={{ position: VIEWS.angle, fov: 38 }} gl={{ antialias: !lite, powerPreference: "high-performance" }} style={{ touchAction: "pan-y" }}>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[3, 5, 2]} intensity={2.2} color="#ffe2b0" />
-      <pointLight position={[-3, 1.5, -2]} intensity={14} color="#ff8a2b" />
-      <Environment resolution={64}>
-        <Lightformer form="rect" intensity={2.5} position={[0, 4, 2]} scale={[6, 2, 1]} color="#ffd9a0" />
-        <Lightformer form="rect" intensity={1.2} position={[-4, 1, -2]} scale={[2, 4, 1]} color="#ff9a3c" />
+      <ambientLight intensity={0.32} />
+      <hemisphereLight args={["#fff1dc", "#24130b", 0.8]} />
+      <directionalLight castShadow position={[3.5, 6, 4]} intensity={2.6} color="#fff0d5" shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
+      <directionalLight position={[-4, 2, -3]} intensity={1.05} color="#ff9b50" />
+      <pointLight position={[0, 2.5, 3]} intensity={9} distance={8} decay={2} color="#ffe0b0" />
+      <Environment resolution={128}>
+        <Lightformer form="rect" intensity={3.2} position={[0, 5, 3]} scale={[7, 2, 1]} color="#fff0d8" />
+        <Lightformer form="rect" intensity={1.8} position={[-4, 1, -2]} scale={[2, 4, 1]} color="#ffad64" />
+        <Lightformer form="ring" intensity={1.1} position={[3, 1, -4]} scale={[3, 3, 1]} color="#f6d4a4" />
       </Environment>
       <Scene visual={visual} has={has} scale={scale} modelUrl={modelUrl} onReady={onReady} />
       {!lite && <ContactShadows position={[0, -0.32, 0]} opacity={0.55} scale={6} blur={2.6} far={2} />}
