@@ -128,9 +128,9 @@ export function computeTotals(subtotal: number, s: TotalsSettings, coupon: Coupo
 
 /* ───────── helpers ───────── */
 
-export function formatMoney(cents: number, currency = "USD", locale?: string) {
+export function formatMoney(cents: number, currency = "INR", locale?: string) {
   try {
-    return new Intl.NumberFormat(locale, { style: "currency", currency }).format(cents / 100);
+    return new Intl.NumberFormat(locale ?? (currency === "INR" ? "en-IN" : undefined), { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(cents / 100);
   } catch {
     return `${(cents / 100).toFixed(2)} ${currency}`;
   }

@@ -111,8 +111,9 @@ export default function MenuPage() {
                 const gs = data.links.filter((l) => l.itemId === it.id);
                 return (
                   <Card key={it.id} className="flex items-center gap-4 !p-3">
-                    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-black/40">
-                      {(it.imageAssetId || it.imageUrl) && /* eslint-disable-next-line @next/next/no-img-element */ <img src={it.imageAssetId ? `/api/assets/${it.imageAssetId}` : it.imageUrl} alt="" className="h-full w-full object-cover" />}
+                    <div className="relative grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-emerald-50 text-2xl">
+                      <span aria-hidden="true">🍽️</span>
+                      {(it.imageAssetId || it.imageUrl) && /* eslint-disable-next-line @next/next/no-img-element */ <img src={it.imageAssetId ? `/api/assets/${it.imageAssetId}` : it.imageUrl} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} className="absolute inset-0 h-full w-full object-cover" />}
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-medium text-white">{it.name}</p>

@@ -32,6 +32,7 @@ export type CartLine = {
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const SIZE_SCALE: Record<string, number> = { small: 0.82, medium: 1, large: 1.08, regular: 1 };
+const FOOD_EMOJI: Record<string, string> = { pizza: "🍕", burger: "🍔", pasta: "🍝", drink: "🥤", dessert: "🍰", generic: "🍽️" };
 
 export function webglOK() {
   try {
@@ -45,6 +46,7 @@ export function webglOK() {
 export default function DishSheet({ item, lang, currency, T, lite, onClose, onAdd }: { item: MenuItemFull; lang: string; currency: string; T: Dict; lite: boolean; onClose: () => void; onAdd: (l: CartLine) => void }) {
   const has3d = item.visual !== "generic" || !!item.modelUrl;
   const [gl, setGl] = useState(false);
+  const [photoFailed, setPhotoFailed] = useState(false);
   const [mode, setMode] = useState<"photo" | "3d">("photo");
   const [cam, setCam] = useState<ViewName>("angle");
   const [variantId, setVariantId] = useState<string | null>(() => (item.variants.find((v) => v.isDefault && v.available) ?? item.variants.find((v) => v.available) ?? null)?.id ?? null);
@@ -59,6 +61,7 @@ export default function DishSheet({ item, lang, currency, T, lite, onClose, onAd
   const api3d = useRef<Food3DApi | null>(null);
 
   useEffect(() => {
+    setPhotoFailed(false);
     const ok = webglOK();
     setGl(ok);
     if (ok && has3d && !lite) setMode("3d");
@@ -189,11 +192,11 @@ export default function DishSheet({ item, lang, currency, T, lite, onClose, onAd
             <div className="absolute inset-0">
               <Food3D visual={item.visual} layers={layers} scale={scale} view={cam} modelUrl={item.modelUrl} lite={lite} onReady={(a) => (api3d.current = a)} />
             </div>
-          ) : item.imageUrl ? (
+          ) : item.imageUrl && !photoFailed ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={item.imageUrl} alt={tr(item, lang)} className="h-full w-full object-cover" />
+            <img src={item.imageUrl} alt={tr(item, lang)} onError={() => setPhotoFailed(true)} className="h-full w-full object-cover" />
           ) : (
-            <div className="grid h-full place-items-center text-6xl">🍽️</div>
+            <div className="grid h-full place-items-center bg-[radial-gradient(ellipse_at_50%_40%,color-mix(in_srgb,var(--brand)_28%,transparent),transparent_70%)] text-7xl">{FOOD_EMOJI[item.visual] ?? FOOD_EMOJI.generic}</div>
           )}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--bg)] to-transparent" />
           <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full glass p-1 text-xs">

@@ -83,6 +83,22 @@ export type MenuTree = {
   items: MenuItemFull[];
 };
 
+const LEGACY_FOOD_PHOTOS: Record<string, string> = {
+  pizza: "photo-1513104890138-7c749659a591",
+  burger: "photo-1568901346375-23c9450c58cd",
+  pasta: "photo-1473093295043-cdd812d0e601",
+  coffee: "photo-1509042239860-f550ce710b93",
+  dessert: "photo-1578985545062-69928b1d9587",
+};
+function menuImageUrl(value: string | null, visual: string) {
+  if (!value) return null;
+  const legacy = value.match(/^\/food\/([^/]+)\.(?:jpe?g|png|webp)$/i);
+  if (!legacy) return value;
+  const key = legacy[1].toLowerCase();
+  const photo = LEGACY_FOOD_PHOTOS[key] ?? LEGACY_FOOD_PHOTOS[visual] ?? LEGACY_FOOD_PHOTOS.dessert;
+  return "https://images.unsplash.com/" + photo + "?auto=format&fit=crop&w=1000&q=85";
+}
+
 export async function loadMenuTree(restaurantId: string, timezone: string): Promise<MenuTree> {
   const [cats, items, variants, links, groups, options] = await Promise.all([
     db.select().from(menuCategories).where(and(eq(menuCategories.restaurantId, restaurantId), eq(menuCategories.active, true))).orderBy(asc(menuCategories.sort), asc(menuCategories.name)),
@@ -132,7 +148,7 @@ export async function loadMenuTree(restaurantId: string, timezone: string): Prom
       translations: i.translations,
       ingredients: i.ingredients,
       basePrice: i.basePrice,
-      imageUrl: i.imageAssetId ? `/api/assets/${i.imageAssetId}` : i.imageUrl,
+      imageUrl: i.imageAssetId ? `/api/assets/${i.imageAssetId}` : menuImageUrl(i.imageUrl, i.visual),
       modelUrl: i.modelAssetId ? `/api/assets/${i.modelAssetId}` : null,
       visual: i.visual,
       available: i.available,

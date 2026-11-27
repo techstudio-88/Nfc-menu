@@ -45,10 +45,10 @@ function Overview() {
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <Stat label="Restaurants" value={d.restaurants.total} sub={`${d.restaurants.active} active · ${d.restaurants.suspended} suspended`} accent />
-        <Stat label="MRR" value={formatMoney(d.subscriptions.mrr, "USD")} sub={`${d.subscriptions.active} paying`} />
+        <Stat label="MRR" value={formatMoney(d.subscriptions.mrr, "INR")} sub={`${d.subscriptions.active} paying`} />
         <Stat label="Trials" value={d.subscriptions.trialing} />
         <Stat label="Orders processed" value={d.orders.orders} />
-        <Stat label="Paid GMV" value={formatMoney(Math.round(d.orders.gmv), "USD")} sub={`${d.openSupport} open support`} />
+        <Stat label="Paid GMV" value={formatMoney(Math.round(d.orders.gmv), "INR")} sub={`${d.openSupport} open support`} />
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
         <Card><h2 className="font-display mb-3 text-2xl text-white">Orders · last 14 days</h2>{d.ordersTrend.length ? <Spark label="Orders per day" data={d.ordersTrend.map((x: any) => x.n)} /> : <p className="py-8 text-center text-sm text-neutral-500">No orders yet.</p>}</Card>
@@ -79,7 +79,7 @@ function Restaurants() {
             </div>
             <div className="text-xs text-neutral-400">
               <p>{r.branches} branches · {r.tables} tables · {r.items} dishes · {r.employees} staff</p>
-              <p>{r.orders30} orders · {formatMoney(r.revenue30, "USD")} (30d)</p>
+              <p>{r.orders30} orders · {formatMoney(r.revenue30, "INR")} (30d)</p>
             </div>
             <Select aria-label="Plan" className="!w-auto" value={r.planId ?? ""} onChange={(e) => run({ action: "setPlan", restaurantId: r.id, planId: e.target.value, status: r.subStatus ?? "active" }, "Plan updated")}>
               {(pl.data?.rows ?? []).map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
@@ -108,7 +108,7 @@ function Plans() {
         {q.data.rows.map((p: any) => (
           <Card key={p.id}>
             <p className="font-display text-2xl text-white">{p.name} {!p.active && <Badge tone="red">inactive</Badge>}</p>
-            <p className="mt-1 text-3xl text-amber-300">{formatMoney(p.priceCents, "USD")}<span className="text-sm text-neutral-500"> /{p.interval}</span></p>
+            <p className="mt-1 text-3xl text-amber-300">{formatMoney(p.priceCents, "INR")}<span className="text-sm text-neutral-500"> /{p.interval}</span></p>
             <ul className="mt-3 space-y-1 text-sm text-neutral-300"><li>{p.maxBranches} branches</li><li>{p.maxTables} tables</li><li>{p.maxMenuItems} dishes</li><li>{p.maxEmployees} team members</li></ul>
             <Button className="mt-4" size="sm" onClick={() => setEdit(p)}>Edit</Button>
           </Card>

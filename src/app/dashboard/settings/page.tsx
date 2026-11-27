@@ -79,7 +79,7 @@ export default function Settings() {
               <p className="font-display mt-2 text-4xl">{r.name}</p>
               <p className="mt-1 text-sm italic opacity-60">{r.tagline}</p>
               <div className="mt-6 flex gap-2">
-                <span className="rounded-full px-4 py-2 text-sm font-semibold text-black" style={{ background: `linear-gradient(135deg, ${r.primaryColor}, ${r.accentColor})` }}>Add to bag · $12.00</span>
+                <span className="rounded-full px-4 py-2 text-sm font-semibold text-black" style={{ background: `linear-gradient(135deg, ${r.primaryColor}, ${r.accentColor})` }}>Add to bag · ₹12.00</span>
                 <span className="rounded-full border px-4 py-2 text-sm" style={{ borderColor: r.primaryColor, color: r.primaryColor }}>Customise</span>
               </div>
             </div>
@@ -101,7 +101,7 @@ export default function Settings() {
               <Field label="Fixed fee label"><Input value={s.feeLabel ?? ""} onChange={(e) => setS({ ...s, feeLabel: e.target.value })} /></Field>
               <Field label="Fixed fee per order"><MoneyInput value={s.feeCents ?? 0} onChange={(c) => setS({ ...s, feeCents: c })} /></Field>
             </div>
-            <p className="text-xs text-neutral-500">Example: a {formatMoney(2000, s.currency || "USD")} order → {formatMoney(2000 + Math.round(2000 * (s.taxRateBps ?? 0) / 10000) + Math.round(2000 * (s.serviceChargeBps ?? 0) / 10000) + (s.feeCents ?? 0) - Math.round(2000 * (s.autoDiscountBps ?? 0) / 10000), s.currency || "USD")} (approx.) at checkout.</p>
+            <p className="text-xs text-neutral-500">Example: a {formatMoney(2000, s.currency || "INR")} order → {formatMoney(2000 + Math.round(2000 * (s.taxRateBps ?? 0) / 10000) + Math.round(2000 * (s.serviceChargeBps ?? 0) / 10000) + (s.feeCents ?? 0) - Math.round(2000 * (s.autoDiscountBps ?? 0) / 10000), s.currency || "INR")} (approx.) at checkout.</p>
             <Button variant="primary" busy={busy} onClick={() => save({ currency: s.currency, timezone: s.timezone, taxLabel: s.taxLabel, taxRateBps: s.taxRateBps, serviceChargeBps: s.serviceChargeBps, autoDiscountBps: s.autoDiscountBps, feeLabel: s.feeLabel, feeCents: s.feeCents }, "Pricing saved")}>Save pricing</Button>
           </Card>
           <Card className="space-y-4">
@@ -183,7 +183,7 @@ function PlanSupport({ data }: { data: any }) {
         <h2 className="font-display text-2xl text-white">Subscription</h2>
         {p ? (
           <>
-            <p className="mt-2 text-neutral-300">{p.name} · {formatMoney(p.priceCents, "USD")}/{p.interval} <Badge tone={data.subscription?.status === "active" ? "green" : "amber"}>{data.subscription?.status}</Badge></p>
+            <p className="mt-2 text-neutral-300">{p.name} · {formatMoney(p.priceCents, "INR")}/{p.interval} <Badge tone={data.subscription?.status === "active" ? "green" : "amber"}>{data.subscription?.status}</Badge></p>
             {data.subscription?.currentPeriodEnd && <p className="text-xs text-neutral-500">Current period ends {new Date(data.subscription.currentPeriodEnd).toLocaleDateString()}</p>}
             <div className="mt-4 space-y-3 text-sm">
               {[["Branches", data.usage.branches, p.maxBranches], ["Tables", data.usage.tables, p.maxTables], ["Menu items", data.usage.items, p.maxMenuItems], ["Team members", data.usage.employees, p.maxEmployees]].map(([l, n, m]) => (

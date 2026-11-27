@@ -107,8 +107,8 @@ export const restaurantSettings = pgTable("restaurant_settings", {
   restaurantId: uuid("restaurant_id")
     .primaryKey()
     .references(() => restaurants.id, { onDelete: "cascade" }),
-  currency: text("currency").notNull().default("USD"),
-  timezone: text("timezone").notNull().default("UTC"),
+  currency: text("currency").notNull().default("INR"),
+  timezone: text("timezone").notNull().default("Asia/Kolkata"),
   taxRateBps: integer("tax_rate_bps").notNull().default(0),
   taxLabel: text("tax_label").notNull().default("Tax"),
   serviceChargeBps: integer("service_charge_bps").notNull().default(0),
@@ -341,7 +341,7 @@ export const orders = pgTable(
     serviceCharge: integer("service_charge").notNull().default(0),
     fees: integer("fees").notNull().default(0),
     total: integer("total").notNull(),
-    currency: text("currency").notNull().default("USD"),
+    currency: text("currency").notNull().default("INR"),
     paymentMethod: text("payment_method").notNull().default("cash"),
     paymentStatus: text("payment_status").notNull().default("pending"), // pending | paid | failed | refunded
     couponCode: text("coupon_code"),
@@ -521,7 +521,7 @@ export const paymentRecords = pgTable(
     provider: text("provider").notNull().default("manual"), // manual | stripe
     method: text("method").notNull(),
     amount: integer("amount").notNull(),
-    currency: text("currency").notNull().default("USD"),
+    currency: text("currency").notNull().default("INR"),
     status: text("status").notNull().default("pending"), // pending | paid | failed | refunded
     externalRef: text("external_ref"),
     createdAt: created(),

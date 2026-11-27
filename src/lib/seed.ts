@@ -6,13 +6,17 @@ import { HttpError } from "@/lib/api";
 import { hashPassword } from "@/lib/auth";
 import { checkLimit } from "@/lib/crud";
 
+// Seed values were authored in USD minor units; convert to INR paise at the reference rate.
+const USD_TO_INR = 92.5;
+const toInrMinor = (amount: number) => Math.round(amount * USD_TO_INR);
+
 export async function ensurePlans() {
   const [{ n }] = await db.select({ n: sql<number>`count(*)::int` }).from(S.subscriptionPlans);
   if (n > 0) return;
   await db.insert(S.subscriptionPlans).values([
     { code: "starter", name: "Starter", priceCents: 0, maxBranches: 1, maxTables: 12, maxMenuItems: 40, maxEmployees: 5, features: ["NFC menu", "Kitchen display", "Basic analytics"] },
-    { code: "growth", name: "Growth", priceCents: 4900, maxBranches: 3, maxTables: 60, maxMenuItems: 200, maxEmployees: 25, features: ["Everything in Starter", "3D & AR viewer", "AI summaries", "Coupons"] },
-    { code: "scale", name: "Scale", priceCents: 14900, maxBranches: 25, maxTables: 500, maxMenuItems: 2000, maxEmployees: 200, features: ["Everything in Growth", "Priority support", "Multi-branch analytics"] },
+    { code: "growth", name: "Growth", priceCents: toInrMinor(4900), maxBranches: 3, maxTables: 60, maxMenuItems: 200, maxEmployees: 25, features: ["Everything in Starter", "3D & AR viewer", "AI summaries", "Coupons"] },
+    { code: "scale", name: "Scale", priceCents: toInrMinor(14900), maxBranches: 25, maxTables: 500, maxMenuItems: 2000, maxEmployees: 200, features: ["Everything in Growth", "Priority support", "Multi-branch analytics"] },
   ]);
 }
 
@@ -36,7 +40,7 @@ export async function provisionRestaurant(opts: { ownerId: string; name: string;
   return db.transaction(async (tx) => {
     const [r] = await tx.insert(S.restaurants).values({ name: opts.name, slug }).returning();
     await tx.insert(S.restaurantMembers).values({ restaurantId: r.id, userId: opts.ownerId, role: "owner" });
-    await tx.insert(S.restaurantSettings).values({ restaurantId: r.id });
+    await tx.insert(S.restaurantSettings).values({ restaurantId: r.id, currency: "INR", timezone: "Asia/Kolkata" });
     await tx.insert(S.subscriptions).values({ restaurantId: r.id, planId: plan.id, status: "trialing", currentPeriodEnd: new Date(Date.now() + 14 * 864e5) });
     await tx.insert(S.branches).values({ restaurantId: r.id, name: "Main branch" });
     await tx.insert(S.kitchenStations).values({ restaurantId: r.id, name: "Kitchen" });
@@ -97,7 +101,7 @@ export async function loadStarterMenu(restaurantId: string) {
       .returning();
     const opts = await db
       .insert(S.customizationOptions)
-      .values(g.opts.map((o, i) => ({ restaurantId, groupId: row.id, name: o.name, price: o.price ?? 0, priceBySize: o.by ?? {}, layer: o.layer ?? null, isDefault: !!o.def, sort: i, translations: (o.es ? { es: { name: o.es } } : {}) as Record<string, { name?: string }> })))
+      .values(g.opts.map((o, i) => ({ restaurantId, groupId: row.id, name: o.name, price: toInrMinor(o.price ?? 0), priceBySize: Object.fromEntries(Object.entries(o.by ?? {}).map(([k, v]) => [k, toInrMinor(v)])), layer: o.layer ?? null, isDefault: !!o.def, sort: i, translations: (o.es ? { es: { name: o.es } } : {}) as Record<string, { name?: string }> })))
       .returning();
     return { id: row.id, opt: (name: string) => opts.find((o) => o.name === name)!.id };
   };
@@ -204,7 +208,7 @@ export async function loadStarterMenu(restaurantId: string) {
         categoryId: o.cat,
         name: o.name,
         description: o.desc,
-        basePrice: o.price,
+        basePrice: toInrMinor(o.price),
         imageUrl: `/food/${o.img}.jpg`,
         visual: o.visual,
         stationId: stations[o.station],
@@ -216,7 +220,7 @@ export async function loadStarterMenu(restaurantId: string) {
       })
       .returning();
     if (o.variants?.length) {
-      await db.insert(S.menuItemVariants).values(o.variants.map((v, i) => ({ restaurantId, itemId: it.id, name: v[0], priceDelta: v[1], isDefault: !!v[2], sort: i })));
+      await db.insert(S.menuItemVariants).values(o.variants.map((v, i) => ({ restaurantId, itemId: it.id, name: v[0], priceDelta: toInrMinor(v[1]), isDefault: !!v[2], sort: i })));
     }
     if (o.groups.length) await db.insert(S.menuItemCustomizationGroups).values(o.groups.map((g, i) => ({ restaurantId, itemId: it.id, groupId: g.id, sort: i })));
     return it;
