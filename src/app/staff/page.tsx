@@ -88,7 +88,7 @@ export default function Staff() {
           <div className="space-y-2">
             {req.data!.rows.map((r) => (
               <Card key={r.id} className="flex items-center justify-between !p-4">
-                <p className="text-white">Table <b className="text-amber-300">{r.tableCode}</b> <span className="text-neutral-400">— {r.kind === "bill" ? "wants the bill" : r.kind === "water" ? "needs water" : "needs assistance"}</span></p>
+                <div className="min-w-0"><p className="text-white">Table <b className="text-emerald-700">{r.tableCode}</b> <span className="text-neutral-500">— {r.kind === "payment" ? "ready to pay" : r.kind === "bill" ? "requested the bill" : r.kind === "water" ? "needs water" : r.kind === "waiter" ? "called a waiter" : "needs assistance"}</span></p>{r.message && <p className="mt-1 text-xs text-neutral-500">{r.message}</p>}</div>
                 <Button variant="success" onClick={() => resolve(r.id)}>Done</Button>
               </Card>
             ))}

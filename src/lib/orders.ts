@@ -715,7 +715,7 @@ export async function createAssistance(restaurantId: string, tableCode: string, 
     .limit(1);
   if (open) return { ok: true, duplicate: true };
   const [a] = await db.insert(assistanceRequests).values({ restaurantId, tableId: tr.table.id, tableCode: tr.table.code, kind, message: message.slice(0, 200) }).returning();
-  const label = kind === "bill" ? "wants the bill" : kind === "water" ? "needs water" : "needs assistance";
+  const label = kind === "bill" ? "requested the bill" : kind === "payment" ? "is ready to pay" : kind === "water" ? "needs water" : kind === "waiter" ? "called a waiter" : "needs assistance";
   const title = `Table ${tr.table.code} ${label}`;
   const emps = await db
     .select({ id: employees.id })
