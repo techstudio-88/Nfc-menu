@@ -717,3 +717,32 @@ body:has(.kitchen-shell),body:has(.staff-shell),body:has([data-panel="kitchen"])
 .kitchen-shell [class*="bg-rose-"],.staff-shell [class*="bg-rose-"],[data-panel="kitchen"] [class*="bg-rose-"],[data-panel="floor"] [class*="bg-rose-"]{background:#e2f2e9!important}
 :focus-visible{outline-color:#087653!important}
 @media(prefers-reduced-motion:no-preference){.tm-shell aside{box-shadow:8px 0 35px rgba(5,56,40,.08)}.tm-shell main .tm-card:hover{transform:translateY(-2px)}}
+
+
+/* Demo launch + landing-page motion polish */
+.demo-launch { isolation:isolate; }
+.demo-launch::before {
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:.32;
+  background-image:radial-gradient(rgba(255,190,198,.16) .7px,transparent .7px);
+  background-size:24px 24px; mask-image:linear-gradient(180deg,#000,transparent 85%);
+}
+.demo-glow-one { background:radial-gradient(circle,rgba(180,35,61,.34),rgba(102,18,42,.12) 48%,transparent 72%); animation:demo-glow-drift 12s ease-in-out infinite alternate; }
+.demo-glow-two { background:radial-gradient(circle,rgba(126,24,49,.3),transparent 68%); animation:demo-glow-drift 16s ease-in-out infinite alternate-reverse; }
+.demo-launch-card { box-shadow:0 35px 120px rgba(0,0,0,.55),0 0 70px rgba(164,31,56,.1),inset 0 1px rgba(255,255,255,.06); animation:demo-card-enter .8s cubic-bezier(.2,.8,.2,1) both; }
+.demo-launch-card::before { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(125deg,rgba(255,190,198,.08),transparent 35%,transparent 70%,rgba(196,46,70,.1)); }
+.demo-orbit { animation:demo-orbit 5s ease-in-out infinite; }
+.demo-progress span { animation:demo-progress 2.4s ease-in-out infinite; }
+.senso-page a { transition:color .25s ease,border-color .25s ease,background-color .25s ease,transform .25s ease; }
+.senso-page nav a { position:relative; }
+.senso-page nav a::after { content:""; position:absolute; left:0; right:100%; bottom:-8px; height:1px; background:#e45b6b; transition:right .3s ease; }
+.senso-page nav a:hover::after { right:0; }
+.senso-page [data-reveal] { opacity:0; transform:translateY(24px); filter:blur(5px); transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1),filter .8s ease; }
+.senso-page [data-reveal].is-visible { opacity:1; transform:translateY(0); filter:blur(0); }
+@keyframes demo-card-enter { from { opacity:0; transform:translateY(22px) scale(.985); } to { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes demo-orbit { 0%,100% { transform:translateY(0) rotate(-4deg); box-shadow:0 0 35px rgba(190,35,65,.16); } 50% { transform:translateY(-7px) rotate(5deg); box-shadow:0 0 65px rgba(220,65,91,.28); } }
+@keyframes demo-progress { 0% { transform:translateX(-28%); } 55% { transform:translateX(30%); } 100% { transform:translateX(90%); } }
+@keyframes demo-glow-drift { from { transform:translate3d(-2%,0,0) scale(.94); } to { transform:translate3d(4%,7%,0) scale(1.08); } }
+@media (prefers-reduced-motion:reduce) {
+  .demo-launch-card,.demo-orbit,.demo-progress span,.demo-glow-one,.demo-glow-two { animation:none!important; }
+  .senso-page [data-reveal] { opacity:1; transform:none; filter:none; }
+}
