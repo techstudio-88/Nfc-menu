@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "TapMenu", statusBarStyle: "black-translucent" },
 };
 
-export const viewport: Viewport = { themeColor: "#7f1724", width: "device-width", initialScale: 1, viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#075c43", width: "device-width", initialScale: 1, viewportFit: "cover" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

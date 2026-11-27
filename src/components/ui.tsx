@@ -31,7 +31,7 @@ export function Providers({ children }: { children: ReactNode }) {
                 "pointer-events-auto max-w-md rounded-xl border px-4 py-2.5 text-sm shadow-2xl backdrop-blur",
                 t.kind === "ok" && "border-emerald-500/30 bg-emerald-950/90 text-emerald-100",
                 t.kind === "err" && "border-red-500/40 bg-red-950/90 text-red-100",
-                t.kind === "info" && "border-amber-500/30 bg-neutral-900/95 text-amber-100",
+                t.kind === "info" && "border-emerald-500/30 bg-emerald-950/95 text-emerald-100",
               )}
               role={t.kind === "err" ? "alert" : "status"}
             >
@@ -52,11 +52,11 @@ export function Button({ variant = "subtle", size = "md", busy, className, child
       {...p}
       disabled={disabled || busy}
       className={cx(
-        "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400",
+        "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400",
         size === "sm" && "px-3 py-1.5 text-xs",
         size === "md" && "px-4 py-2 text-sm",
         size === "lg" && "px-6 py-3.5 text-base",
-        variant === "primary" && "bg-gradient-to-b from-rose-500 to-red-800 text-white shadow-[0_6px_24px_-8px_rgba(190,35,58,.65)] hover:from-rose-400 hover:to-red-700",
+        variant === "primary" && "bg-gradient-to-b from-emerald-500 to-red-800 text-white shadow-[0_6px_24px_-8px_rgba(190,35,58,.65)] hover:from-emerald-400 hover:to-red-700",
         variant === "success" && "bg-emerald-500 text-emerald-950 hover:bg-emerald-400",
         variant === "subtle" && "border border-white/10 bg-white/5 text-neutral-100 hover:bg-white/10",
         variant === "ghost" && "text-neutral-300 hover:bg-white/5 hover:text-white",
@@ -74,7 +74,7 @@ export function Spinner({ className }: { className?: string }) {
   return <span className={cx("inline-block animate-spin rounded-full border-2 border-current border-t-transparent", className ?? "h-5 w-5")} aria-hidden />;
 }
 
-const inputCls = "w-full rounded-xl border border-white/10 bg-neutral-900/80 px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-500 focus:border-rose-400/60 focus:outline-none focus:ring-2 focus:ring-rose-400/20";
+const inputCls = "w-full rounded-xl border border-white/10 bg-neutral-900/80 px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-500 focus:border-emerald-400/60 focus:outline-none focus:ring-2 focus:ring-emerald-400/20";
 export function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return (
     <label className="block space-y-1.5">
@@ -90,7 +90,7 @@ export const Select = (p: SelectHTMLAttributes<HTMLSelectElement>) => <select {.
 
 export function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
   return (
-    <button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} className={cx("relative h-6 w-11 shrink-0 rounded-full transition", checked ? "bg-rose-600" : "bg-neutral-700")}>
+    <button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} className={cx("relative h-6 w-11 shrink-0 rounded-full transition", checked ? "bg-emerald-600" : "bg-neutral-700")}>
       <span className={cx("absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all", checked ? "left-[22px]" : "left-0.5")} />
     </button>
   );
@@ -99,8 +99,8 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
 export function Badge({ children, tone = "neutral" }: { children: ReactNode; tone?: "neutral" | "amber" | "rose" | "green" | "red" | "blue" | "violet" }) {
   const t = {
     neutral: "bg-white/5 text-neutral-300 border-white/10",
-    amber: "bg-rose-500/10 text-rose-300 border-rose-500/30",
-    rose: "bg-rose-500/10 text-rose-300 border-rose-500/30",
+    amber: "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
+    rose: "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
     green: "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
     red: "bg-red-500/10 text-red-300 border-red-500/30",
     blue: "bg-sky-500/10 text-sky-300 border-sky-500/30",
@@ -138,7 +138,7 @@ export function PageHeader({ title, sub, actions }: { title: string; sub?: strin
 export function Empty({ icon = "✦", title, text, action }: { icon?: string; title: string; text?: string; action?: ReactNode }) {
   return (
     <div className="flex flex-col items-center rounded-2xl border border-dashed border-white/10 px-6 py-14 text-center">
-      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-rose-500/10 text-xl text-rose-300">{icon}</div>
+      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-xl text-emerald-300">{icon}</div>
       <p className="font-display text-xl text-white">{title}</p>
       {text && <p className="mt-1 max-w-sm text-sm text-neutral-400">{text}</p>}
       {action && <div className="mt-4">{action}</div>}
@@ -215,7 +215,7 @@ export function Modal({ open, onClose, title, children, wide }: { open: boolean;
 
 export function Stat({ label, value, sub, accent }: { label: string; value: ReactNode; sub?: string; accent?: boolean }) {
   return (
-    <div className={cx("tm-card rounded-2xl border p-5", accent ? "border-rose-500/30 bg-gradient-to-br from-rose-600/20 to-red-950/20" : "border-white/10 bg-neutral-900/60")}>
+    <div className={cx("tm-card rounded-2xl border p-5", accent ? "border-emerald-500/30 bg-gradient-to-br from-emerald-600/20 to-red-950/20" : "border-white/10 bg-neutral-900/60")}>
       <p className="text-xs uppercase tracking-wider text-neutral-400">{label}</p>
       <p className="mt-2 font-display text-3xl text-white">{value}</p>
       {sub && <p className="mt-1 text-xs text-neutral-500">{sub}</p>}
