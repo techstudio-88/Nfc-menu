@@ -20,15 +20,15 @@ function LineIcon({ name, className = "" }: { name: string; className?: string }
 export const dynamic = "force-dynamic";
 
 const highlights = [
-  { icon: "leaf", title: "LOCALLY SOURCED", body: "Fresh ingredients, beautifully presented and easy to explore." },
-  { icon: "spark", title: "CULINARY ARTISTRY", body: "Every dish deserves its own moment in the spotlight." },
-  { icon: "plate", title: "A BETTER TABLE", body: "A seamless experience from the first tap to the final bite." },
+  { icon: "leaf", title: "FRESH & READY", body: "Fresh ingredients, beautifully presented and easy to explore." },
+  { icon: "spark", title: "MADE TO STAND OUT", body: "Every dish deserves its own moment in the spotlight." },
+  { icon: "plate", title: "EASY FOR EVERY GUEST", body: "A seamless experience from the first tap to the final bite." },
 ];
 const features = [
-  ["01", "A menu worth looking at", "Bring dishes to life with rich photography and interactive 3D previews. Let guests explore every detail before they order."],
-  ["02", "Make it exactly how you like", "Sizes, toppings, sauces, add-ons and removals. Guests personalise dishes while prices update instantly."],
-  ["03", "One tap opens everything", "Connect NFC cards and table tags to your branded restaurant menu. No app download and no complicated guest signup."],
-  ["04", "Orders move in real time", "Send orders to the right kitchen station, keep staff informed and let guests follow their order status."],
+  ["01", "Menus guests love", "Show every dish with great photos and 3D previews. Help guests choose with confidence."],
+  ["02", "Every order, just right", "Guests can pick sizes, toppings and extras. The price updates as they choose."],
+  ["03", "One tap is all it takes", "Guests tap your NFC card and your menu opens. No app to install and no signup needed."],
+  ["04", "Orders reach your kitchen", "Send each order to the right kitchen screen. Your team can track it from start to finish."],
 ];
 const steps = [
   ["01", "Tap", "A guest taps the NFC card placed on their table."],
@@ -54,7 +54,7 @@ export default function Home() {
         <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:px-12">
           <Link href="/" className="senso-wordmark text-xl tracking-[.28em] sm:text-2xl">TAPMENU</Link>
           <nav className="hidden items-center gap-7 text-[9px] font-medium tracking-[.14em] text-white/65 lg:flex">
-            <a href="#home" className="hover:text-[#e45b65]">HOME</a><a href="#experience" className="hover:text-[#e45b65]">EXPERIENCE</a><a href="#platform" className="hover:text-[#e45b65]">PLATFORM</a><a href="#how" className="hover:text-[#e45b65]">HOW IT WORKS</a><a href="#pricing" className="hover:text-[#e45b65]">PRICING</a>
+            <a href="#home" className="hover:text-[#e45b65]">HOME</a><a href="#experience" className="hover:text-[#e45b65]">EXPERIENCE</a><a href="#platform" className="hover:text-[#e45b65]">PLATFORM</a><a href="#how" className="hover:text-[#e45b65]">HOW IT WORKS</a><a href="#demo" className="hover:text-[#e45b65]">DEMO</a><a href="#pricing" className="hover:text-[#e45b65]">PRICING</a>
           </nav>
           <div className="flex items-center gap-2 sm:gap-4">
             <Link href="/login" className="px-2 py-2 text-[10px] tracking-[.12em] text-white/75 transition hover:text-white sm:text-xs">LOG IN</Link>
@@ -71,13 +71,13 @@ export default function Home() {
               <div className="senso-photo-shade" />
               <div className="senso-hero-proof absolute bottom-8 right-8 z-10 hidden items-center gap-3 rounded-2xl border border-rose-300/20 bg-[#13090d]/80 px-4 py-3 shadow-[0_16px_50px_rgba(0,0,0,.35)] backdrop-blur-xl xl:flex"><span className="grid h-9 w-9 place-items-center rounded-xl bg-rose-500/15 text-lg text-rose-200">✦</span><span><span className="block text-[9px] font-semibold tracking-[.16em] text-rose-100">BUILT FOR MODERN DINING</span><span className="mt-1 block text-[10px] text-white/45">NFC · 3D · LIVE ORDERING</span></span><span className="ml-3 h-2 w-2 rounded-full bg-rose-300 shadow-[0_0_14px_#fb7185]"></span></div>
               <div className="senso-hero-copy relative z-10 max-w-[590px] py-10 lg:py-14">
-                <p className="mb-5 text-[9px] font-semibold tracking-[.18em] text-[#e56a70] sm:text-[10px]">THE DIGITAL DINING EXPERIENCE, REIMAGINED</p>
-                <h1 className="senso-heading text-[3.4rem] leading-[.99] tracking-[-.045em] sm:text-6xl lg:text-[clamp(4.8rem,6.3vw,6.7rem)]">Your Menu.<br /><em>Reimagined.</em></h1>
-                <p className="mt-7 max-w-[360px] text-[12px] leading-[1.95] text-[#c8c2b9]/75 sm:text-[13px]">Turn every table into an interactive experience. Guests tap, explore vivid dish previews, customise every detail and order — while your team stays in sync.</p>
+                <p className="mb-5 text-[9px] font-semibold tracking-[.18em] text-[#e56a70] sm:text-[10px]">A BETTER WAY TO ORDER</p>
+                <h1 className="senso-heading text-[3.4rem] leading-[.99] tracking-[-.045em] sm:text-6xl lg:text-[clamp(4.8rem,6.3vw,6.7rem)]">Your menu.<br /><em>Made magical.</em></h1>
+                <p className="mt-7 max-w-[360px] text-[12px] leading-[1.95] text-[#c8c2b9]/75 sm:text-[13px]">Give every table a smart digital menu. Guests tap, explore dishes, choose what they love and place an order in seconds.</p>
                 <div className="mt-8 flex flex-wrap items-center gap-5">
-                  <Link href={demo ? "/r/ember-crust?table=T04" : "/signup"} className="senso-red-button px-6 py-4 text-[9px] font-semibold tracking-[.1em]">EXPLORE THE LIVE MENU</Link>
-                  <Link href="/demo" className="inline-flex items-center gap-2 border border-white/25 bg-black/25 px-6 py-4 text-[9px] font-semibold tracking-[.1em] text-white/85 backdrop-blur transition hover:border-[#e45b65] hover:bg-[#8f2338]/25 hover:text-white"> <span aria-hidden="true">▶</span> LAUNCH INTERACTIVE DEMO</Link>
-                  <Link href="/signup" className="group inline-flex items-center gap-3 text-[9px] font-semibold tracking-[.1em] text-white/85">CREATE YOUR RESTAURANT <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/70 text-[9px] transition group-hover:border-[#d84b56] group-hover:bg-[#d84b56]">↗</span></Link>
+                  <Link href={demo ? "/r/ember-crust?table=T04" : "/signup"} className="senso-red-button px-6 py-4 text-[9px] font-semibold tracking-[.1em]">VIEW THE MENU</Link>
+                  <Link href="/demo" className="inline-flex items-center gap-2 border border-white/25 bg-black/25 px-6 py-4 text-[9px] font-semibold tracking-[.1em] text-white/85 backdrop-blur transition hover:border-[#e45b65] hover:bg-[#8f2338]/25 hover:text-white"> <span aria-hidden="true">▶</span> TRY THE DEMO</Link>
+                  <Link href="/signup" className="group inline-flex items-center gap-3 text-[9px] font-semibold tracking-[.1em] text-white/85">START NOW <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/70 text-[9px] transition group-hover:border-[#d84b56] group-hover:bg-[#d84b56]">↗</span></Link>
                 </div>
                 <div className="mt-8 flex flex-wrap gap-5 text-[9px] tracking-[.15em] text-white/35"><span>NFC ENABLED</span><span>·</span><span>INTERACTIVE 3D</span><span>·</span><span>LIVE ORDERS</span></div>
               </div>
@@ -93,30 +93,50 @@ export default function Home() {
 
         <section id="experience" data-reveal className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32">
           <p className="text-[10px] tracking-[.25em] text-[#e56a70]">01 — THE GUEST EXPERIENCE</p>
-          <div className="mt-5 grid gap-7 md:grid-cols-[1.1fr_.9fr] md:items-end"><h2 className="senso-heading text-5xl leading-[1.02] sm:text-7xl">A menu that feels<br /><em>like an invitation.</em></h2><p className="max-w-lg text-sm leading-7 text-white/50">Paper menus show a list. TapMenu creates a moment. Give every guest the freedom to discover dishes, understand every option and order at their own pace.</p></div>
+          <div className="mt-5 grid gap-7 md:grid-cols-[1.1fr_.9fr] md:items-end"><h2 className="senso-heading text-5xl leading-[1.02] sm:text-7xl">A menu made<br /><em>for everyone.</em></h2><p className="max-w-lg text-sm leading-7 text-white/50">Paper menus show a list. TapMenu creates a moment. Give every guest the freedom to discover dishes, understand every option and order at their own pace.</p></div>
           <div className="mt-14 grid gap-4 sm:grid-cols-2">{features.map(([n,t,d])=><article key={n} data-reveal className="senso-section-card group min-h-[220px] p-7 sm:p-9"><div className="flex items-center justify-between"><span className="senso-heading text-4xl text-white/20">{n}</span><span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d94b5d]/25 bg-[#a72b40]/10 text-[#ed7884] transition group-hover:rotate-45 group-hover:shadow-[0_0_24px_rgba(215,63,85,.22)]"><LineIcon name={n === "01" ? "spark" : n === "02" ? "sliders" : n === "03" ? "nfc" : "bolt"} className="h-5 w-5" /></span></div><h3 className="senso-heading mt-9 text-3xl">{t}</h3><p className="mt-3 max-w-lg text-xs leading-6 text-white/48">{d}</p></article>)}</div>
         </section>
 
         <section id="platform" data-reveal className="border-y border-white/[.09] bg-[#12090a]/90 px-5 py-24 sm:px-8 sm:py-32">
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.85fr_1.15fr]">
-            <div><p className="text-[10px] tracking-[.25em] text-[#e56a70]">02 — ONE CONNECTED PLATFORM</p><h2 className="senso-heading mt-5 text-5xl leading-[1.03] sm:text-7xl">Beautiful up front.<br /><em>Powerful behind it.</em></h2><p className="mt-6 max-w-md text-sm leading-7 text-white/50">The guest sees a seamless menu. Your team gets the tools to run service: manage the menu, control pricing, receive orders and keep the kitchen moving.</p><Link href="/signup" className="senso-red-button mt-8 px-6 py-4 text-[9px] tracking-[.1em]">SET UP YOUR RESTAURANT</Link></div>
+            <div><p className="text-[10px] tracking-[.25em] text-[#e56a70]">02 — ONE CONNECTED PLATFORM</p><h2 className="senso-heading mt-5 text-5xl leading-[1.03] sm:text-7xl">Simple for guests.<br /><em>Powerful for your team.</em></h2><p className="mt-6 max-w-md text-sm leading-7 text-white/50">Guests get an easy menu. Your team can manage dishes, prices, tables and orders from one place.</p><Link href="/signup" className="senso-red-button mt-8 px-6 py-4 text-[9px] tracking-[.1em]">SET UP YOUR RESTAURANT</Link></div>
             <div className="grid gap-3 sm:grid-cols-2">{roles.map(([tag,title,body])=><div key={tag} data-reveal className="senso-section-card p-7"><p className="text-[9px] tracking-[.18em] text-[#df7075]">{tag}</p><h3 className="senso-heading mt-7 text-2xl">{title}</h3><p className="mt-3 text-xs leading-6 text-white/45">{body}</p></div>)}</div>
           </div>
         </section>
 
         <section id="how" data-reveal className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32">
-          <p className="text-[10px] tracking-[.25em] text-[#e56a70]">03 — AS EASY AS A TAP</p><h2 className="senso-heading mt-5 text-5xl sm:text-7xl">Four steps to <em>delight.</em></h2>
+          <p className="text-[10px] tracking-[.25em] text-[#e56a70]">03 — AS EASY AS A TAP</p><h2 className="senso-heading mt-5 text-5xl sm:text-7xl">Four easy steps.</h2>
           <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{steps.map(([n,t,d])=><div key={n} data-reveal className="senso-step p-7"><span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#d94b5d]/25 bg-[#a72b40]/10 text-[#ed7884]"><LineIcon name={n === "01" ? "nfc" : n === "02" ? "spark" : n === "03" ? "sliders" : "chef"} className="h-6 w-6" /></span><span className="ml-auto font-mono text-xs tracking-[.18em] text-white/25">{n}</span><h3 className="senso-heading mt-10 text-3xl">{t}</h3><p className="mt-3 text-xs leading-6 text-white/45">{d}</p></div>)}</div>
           <div className="mt-14 flex flex-col items-start justify-between gap-6 border-y border-white/10 py-8 sm:flex-row sm:items-center"><div><p className="text-[9px] tracking-[.2em] text-[#df7075]">NO APP DOWNLOAD REQUIRED</p><p className="senso-heading mt-2 text-3xl">One tap. Straight to your menu.</p></div><Link href={demo ? "/r/ember-crust?table=T04" : "/signup"} className="senso-red-button px-6 py-4 text-[9px] tracking-[.1em]">TRY THE DEMO MENU ↗</Link></div>
         </section>
 
-        <section id="pricing" data-reveal className="scroll-mt-24 border-y border-white/[.09] bg-black/35 px-5 py-24 sm:px-8 sm:py-32">
-          <div className="mx-auto max-w-7xl"><p className="text-[10px] tracking-[.25em] text-[#e56a70]">04 — YOUR RESTAURANT, YOUR GROWTH</p><div className="mt-5 flex flex-col justify-between gap-6 md:flex-row md:items-end"><h2 className="senso-heading text-5xl sm:text-7xl">Ready for a<br /><em>better service?</em></h2><p className="max-w-md text-sm leading-7 text-white/45">Create your restaurant workspace to explore available plans, manage your menu and bring your tables online.</p></div>
-            <div className="senso-section-card mt-12 flex flex-col justify-between gap-8 p-8 sm:flex-row sm:items-center sm:p-12"><div><p className="text-[9px] tracking-[.2em] text-[#df7075]">START YOUR TAPMENU EXPERIENCE</p><h3 className="senso-heading mt-4 text-4xl sm:text-5xl">Your next chapter starts here.</h3><p className="mt-4 max-w-xl text-xs leading-6 text-white/45">Sign up to create your restaurant, or log in to manage the one you already have.</p></div><div className="flex shrink-0 flex-wrap gap-3"><Link href="/signup" className="senso-red-button px-7 py-4 text-[9px] tracking-[.1em]">CREATE ACCOUNT</Link><Link href="/login" className="senso-outline-button px-7 py-4 text-[9px] tracking-[.1em]">LOG IN</Link></div></div>
+        <section id="demo" data-reveal className="scroll-mt-24 border-y border-rose-300/10 bg-[#16090d]/80 px-5 py-24 sm:px-8 sm:py-32">
+          <div className="mx-auto max-w-7xl">
+            <p className="text-[10px] tracking-[.25em] text-[#f08089]">04 — TRY IT YOURSELF</p>
+            <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_.8fr] lg:items-end">
+              <div><h2 className="senso-heading text-5xl leading-[1.03] sm:text-7xl">Take a look.<br /><em>Try everything.</em></h2>
+                <p className="mt-6 max-w-xl text-sm leading-7 text-white/55">Explore a sample restaurant, place a test order and see how the team tools work. No setup needed.</p>
+              </div>
+              <div className="flex flex-wrap gap-3 lg:justify-end">
+                <Link href="/demo" className="senso-red-button px-7 py-4 text-[10px] font-semibold tracking-[.08em]">OPEN FULL DEMO ↗</Link>
+                <Link href="/r/ember-crust?table=T04" className="senso-outline-button px-7 py-4 text-[10px] font-semibold tracking-[.08em]">VIEW SAMPLE MENU</Link>
+              </div>
+            </div>
+            <div className="mt-12 grid gap-4 md:grid-cols-3">
+              <article className="senso-section-card p-7"><span className="text-2xl">🍽️</span><h3 className="senso-heading mt-6 text-2xl">Explore the menu</h3><p className="mt-3 text-xs leading-6 text-white/50">Browse sample dishes, change options and add items to your cart.</p></article>
+              <article className="senso-section-card p-7"><span className="text-2xl">🧾</span><h3 className="senso-heading mt-6 text-2xl">Place a test order</h3><p className="mt-3 text-xs leading-6 text-white/50">Try the full guest flow with sample tables and test data.</p></article>
+              <article className="senso-section-card p-7"><span className="text-2xl">⚡</span><h3 className="senso-heading mt-6 text-2xl">See the team tools</h3><p className="mt-3 text-xs leading-6 text-white/50">Switch between the owner, kitchen and staff views in the demo.</p></article>
+            </div>
           </div>
         </section>
 
-        <footer id="contact" className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20"><div className="flex flex-col justify-between gap-8 border-b border-white/10 pb-10 md:flex-row md:items-end"><div><Link href="/" className="senso-wordmark text-2xl">TAPMENU</Link><p className="mt-4 max-w-sm text-xs leading-6 text-white/40">A more memorable menu. A more connected restaurant. Every table starts with a tap.</p></div><div className="flex flex-wrap gap-x-7 gap-y-3 text-[9px] tracking-[.16em] text-white/55"><Link href="/r/ember-crust?table=T04" className="hover:text-white">DEMO MENU</Link><Link href="/signup" className="hover:text-white">SIGN UP</Link><Link href="/login" className="hover:text-white">LOG IN</Link><a href="#platform" className="hover:text-white">PLATFORM</a><a href="#pricing" className="hover:text-white">PRICING</a></div></div><div className="flex flex-col justify-between gap-3 pt-6 text-[9px] tracking-[.1em] text-white/30 sm:flex-row"><span>© {new Date().getFullYear()} TAPMENU. ALL RIGHTS RESERVED.</span><span>MADE FOR MEMORABLE DINING.</span></div></footer>
+        <section id="pricing" data-reveal className="scroll-mt-24 border-y border-white/[.09] bg-black/35 px-5 py-24 sm:px-8 sm:py-32">
+          <div className="mx-auto max-w-7xl"><p className="text-[10px] tracking-[.25em] text-[#e56a70]">04 — YOUR RESTAURANT, YOUR GROWTH</p><div className="mt-5 flex flex-col justify-between gap-6 md:flex-row md:items-end"><h2 className="senso-heading text-5xl sm:text-7xl">Ready to make<br /><em>service easier?</em></h2><p className="max-w-md text-sm leading-7 text-white/45">Create your restaurant workspace to explore available plans, manage your menu and bring your tables online.</p></div>
+            <div className="senso-section-card mt-12 flex flex-col justify-between gap-8 p-8 sm:flex-row sm:items-center sm:p-12"><div><p className="text-[9px] tracking-[.2em] text-[#df7075]">START YOUR TAPMENU EXPERIENCE</p><h3 className="senso-heading mt-4 text-4xl sm:text-5xl">Let's get your restaurant online.</h3><p className="mt-4 max-w-xl text-xs leading-6 text-white/45">Sign up to create your restaurant, or log in to manage the one you already have.</p></div><div className="flex shrink-0 flex-wrap gap-3"><Link href="/signup" className="senso-red-button px-7 py-4 text-[9px] tracking-[.1em]">CREATE ACCOUNT</Link><Link href="/login" className="senso-outline-button px-7 py-4 text-[9px] tracking-[.1em]">LOG IN</Link></div></div>
+          </div>
+        </section>
+
+        <footer id="contact" className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20"><div className="flex flex-col justify-between gap-8 border-b border-white/10 pb-10 md:flex-row md:items-end"><div><Link href="/" className="senso-wordmark text-2xl">TAPMENU</Link><p className="mt-4 max-w-sm text-xs leading-6 text-white/40">A more memorable menu. A more connected restaurant. Every table starts with a tap.</p></div><div className="flex flex-wrap gap-x-7 gap-y-3 text-[9px] tracking-[.16em] text-white/55"><Link href="/r/ember-crust?table=T04" className="hover:text-white">DEMO MENU</Link><Link href="/signup" className="hover:text-white">SIGN UP</Link><Link href="/login" className="hover:text-white">LOG IN</Link><a href="#platform" className="hover:text-white">PLATFORM</a><a href="#demo" className="hover:text-white">DEMO</a><a href="#pricing" className="hover:text-white">PRICING</a></div></div><div className="flex flex-col justify-between gap-3 pt-6 text-[9px] tracking-[.1em] text-white/30 sm:flex-row"><span>© {new Date().getFullYear()} TAPMENU. ALL RIGHTS RESERVED.</span><span>MADE FOR BETTER DINING.</span></div></footer>
       </div>
     </main>
   );
