@@ -11,7 +11,7 @@ const Food3D = dynamic(() => import("./Food3D"), {
   ssr: false,
   loading: () => (
     <div className="absolute inset-0 grid place-items-center">
-      <div className="h-24 w-24 animate-pulse rounded-full bg-gradient-to-br from-amber-500/30 to-orange-700/10 blur-sm" />
+      <div className="h-24 w-24 animate-pulse rounded-full bg-gradient-to-br from-rose-500/30 to-rose-700/10 blur-sm" />
     </div>
   ),
 });
@@ -325,7 +325,7 @@ export default function DishSheet({ item, lang, currency, T, lite, onClose, onAd
         </div>
 
         <div className="border-t c-line c-bg px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
-          {!r.ok && <p className="mb-2 text-xs text-amber-300" role="status">{r.errors[0]}</p>}
+          {!r.ok && <p className="mb-2 text-xs text-rose-300" role="status">{r.errors[0]}</p>}
           {!item.availableNow && <p className="mb-2 text-xs text-red-300">{T.soldOut}</p>}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 rounded-full border c-line p-1" role="group" aria-label={T.quantity}>

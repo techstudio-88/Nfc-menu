@@ -564,3 +564,8 @@ body {
 .tm-shell [class*="bg-amber-"],.tm-shell [class*="bg-yellow-"],.tm-shell [class*="bg-orange-"] { background-color:rgba(217,67,88,.14)!important; }
 .tm-shell [class*="border-amber-"],.tm-shell [class*="border-yellow-"],.tm-shell [class*="border-orange-"] { border-color:rgba(217,67,88,.34)!important; }
 @media (max-width:639px) { .senso-hero-proof { display:none!important; } .senso-hero { min-height:600px; } }
+
+/* Guest/customer surfaces use the same crimson tokens as every workspace */
+.c-bg [class*="text-amber-"],.c-bg [class*="text-yellow-"],.c-bg [class*="text-orange-"] { color:#f07883!important; }
+.c-bg [class*="bg-amber-"],.c-bg [class*="bg-yellow-"],.c-bg [class*="bg-orange-"] { background-color:rgba(217,67,88,.14)!important; }
+.c-bg [class*="border-amber-"],.c-bg [class*="border-yellow-"],.c-bg [class*="border-orange-"] { border-color:rgba(217,67,88,.34)!important; }

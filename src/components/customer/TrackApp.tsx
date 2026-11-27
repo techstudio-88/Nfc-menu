@@ -70,7 +70,7 @@ export default function TrackApp({ slug, token }: { slug: string; token: string 
         <div>
           <p className="font-display text-3xl text-white">Order not found</p>
           <p className="mt-2 text-sm text-neutral-400">{err}</p>
-          <Link href={`/r/${slug}`} className="mt-5 inline-block rounded-full bg-amber-500 px-6 py-2.5 font-medium text-black">
+          <Link href={`/r/${slug}`} className="mt-5 inline-block rounded-full bg-rose-500 px-6 py-2.5 font-medium text-black">
             Back to menu
           </Link>
         </div>
@@ -79,7 +79,7 @@ export default function TrackApp({ slug, token }: { slug: string; token: string 
   if (!data)
     return (
       <div className="grid min-h-dvh place-items-center bg-neutral-950">
-        <div className="h-12 w-12 animate-spin rounded-full border-2 border-amber-400/30 border-t-amber-300" />
+        <div className="h-12 w-12 animate-spin rounded-full border-2 border-rose-400/30 border-t-rose-300" />
       </div>
     );
 
@@ -165,7 +165,7 @@ export default function TrackApp({ slug, token }: { slug: string; token: string 
                   <span className="tabular-nums text-neutral-300">{formatMoney(it.lineTotal, o.currency)}</span>
                 </div>
                 {it.customizations.length > 0 && <p className="mt-0.5 text-xs text-neutral-500">{it.customizations.map((c) => (c.action === "remove" ? `No ${c.optionName}` : c.action === "add" ? `+ ${c.optionName}${c.quantity > 1 ? ` ×${c.quantity}` : ""}` : c.optionName)).join(" · ")}</p>}
-                {it.instructions && <p className="mt-0.5 text-xs italic text-amber-300/80">“{it.instructions}”</p>}
+                {it.instructions && <p className="mt-0.5 text-xs italic text-rose-300/80">“{it.instructions}”</p>}
               </li>
             ))}
           </ul>
@@ -178,14 +178,14 @@ export default function TrackApp({ slug, token }: { slug: string; token: string 
             <div className="flex items-baseline justify-between pt-1 text-white"><dt className="font-display text-xl">Total</dt><dd className="font-display text-2xl tabular-nums" style={{ color: brand }}>{formatMoney(o.total, o.currency)}</dd></div>
           </dl>
           <p className="mt-3 text-xs text-neutral-500">
-            Payment: {o.paymentMethod.replace(/_/g, " ")} · <span className={o.paymentStatus === "paid" ? "text-emerald-400" : "text-amber-300"}>{o.paymentStatus}</span>
+            Payment: {o.paymentMethod.replace(/_/g, " ")} · <span className={o.paymentStatus === "paid" ? "text-emerald-400" : "text-rose-300"}>{o.paymentStatus}</span>
           </p>
           {o.paymentMethod === "online" && o.paymentStatus !== "paid" && !cancelled && (
             <button onClick={payNow} className="mt-3 w-full rounded-full py-3 font-semibold text-black" style={{ background: brand }}>
               Pay now
             </button>
           )}
-          {payMsg && <p className="mt-2 text-sm text-amber-200" role="status">{payMsg}</p>}
+          {payMsg && <p className="mt-2 text-sm text-rose-200" role="status">{payMsg}</p>}
         </section>
 
         <AnimatePresence>
