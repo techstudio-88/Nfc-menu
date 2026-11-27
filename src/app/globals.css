@@ -48,7 +48,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.09);
 }
 .gold-text {
-  background: linear-gradient(100deg, #fde68a, #f59e0b 45%, #ea580c);
+  background: linear-gradient(100deg, #ffc0c5, #e34b5b 45%, #8f172b);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -541,3 +541,7 @@ body {
   .tm-shell main,.tm-shell main > header,.tm-shell main > section,
   .tm-shell main > [data-animate="section"] { animation:none!important; }
 }
+
+/* One crimson brand palette across guest menu, menu studio and all panels */
+:root { --tm-crimson:#d94355; --tm-crimson-deep:#861b30; --tm-crimson-soft:#f18b96; }
+.gold-text { background:linear-gradient(100deg,#ffd4d7,#ed6673 48%,#9d2038); -webkit-background-clip:text; background-clip:text; color:transparent; }

@@ -147,13 +147,13 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
 
   const visible = useMemo(() => (cat === "__picks" ? items.filter((i) => i.featured) : items.filter((i) => i.categoryId === cat)), [items, cat]);
   const count = cart.reduce((a, l) => a + l.qty, 0);
-  const brandPrimary = data?.restaurant.primaryColor ?? "#f59e0b";
+  const brandPrimary = data?.restaurant.primaryColor ?? "#c93449";
   const style = useMemo(
     () =>
       ({
         ...(THEMES[data?.restaurant.theme ?? "noir"] ?? THEMES.noir),
         "--brand": brandPrimary,
-        "--accent": data?.restaurant.accentColor ?? "#ea580c",
+        "--accent": data?.restaurant.accentColor ?? "#851b32",
         "--on-brand": lum(brandPrimary) > 0.6 ? "#16110b" : "#ffffff",
       }) as React.CSSProperties,
     [data, brandPrimary],
@@ -201,7 +201,7 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
         <div>
           <p className="font-display text-3xl text-white">Menu unavailable</p>
           <p className="mt-2 text-sm text-neutral-400">{err}</p>
-          <button onClick={load} className="mt-5 rounded-full bg-amber-500 px-6 py-2.5 font-medium text-black">
+          <button onClick={load} className="mt-5 rounded-full bg-gradient-to-r from-rose-600 to-red-800 px-6 py-2.5 font-medium text-white">
             Try again
           </button>
         </div>
@@ -325,7 +325,7 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
               {data.restaurant.tagline && <p className="c-muted mt-3 max-w-md text-base italic">{data.restaurant.tagline}</p>}
             </motion.div>
             {cardBlocked && <p className="mx-auto mt-5 max-w-3xl rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm text-red-200">This NFC card has been deactivated — you can browse the menu, but ordering is disabled.</p>}
-            {!data.settings?.orderingEnabled && <p className="mx-auto mt-5 max-w-3xl rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-2 text-sm text-amber-100">{T.paused}</p>}
+            {!data.settings?.orderingEnabled && <p className="mx-auto mt-5 max-w-3xl rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-2 text-sm text-rose-100">{T.paused}</p>}
           </header>
 
           {/* category navigation */}
@@ -458,18 +458,18 @@ function Intro({ data, T, table, lite, onSkip }: { data: PublicMenu | null; T: D
       <motion.div className="absolute inset-y-0 left-0 w-1/2 bg-[#0d0b09]" initial={{ x: 0 }} exit={{ x: "-100%" }} transition={{ duration: 0.9, delay: 0.1, ease: [0.77, 0, 0.18, 1] }} />
       <motion.div className="absolute inset-y-0 right-0 w-1/2 bg-[#0d0b09]" initial={{ x: 0 }} exit={{ x: "100%" }} transition={{ duration: 0.9, delay: 0.1, ease: [0.77, 0, 0.18, 1] }} />
       <div className="relative z-10 px-6 text-center">
-        <motion.p initial={{ opacity: 0, letterSpacing: "0.1em" }} animate={{ opacity: 1, letterSpacing: "0.4em" }} transition={{ duration: 1.2 }} className="text-[11px] uppercase text-amber-200/70">
+        <motion.p initial={{ opacity: 0, letterSpacing: "0.1em" }} animate={{ opacity: 1, letterSpacing: "0.4em" }} transition={{ duration: 1.2 }} className="text-[11px] uppercase text-rose-200/80">
           {T.welcome}
         </motion.p>
-        <motion.h1 initial={{ opacity: 0, y: 24, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 1, delay: 0.25 }} className="font-display gold-text mt-4 text-5xl sm:text-7xl">
+        <motion.h1 initial={{ opacity: 0, y: 24, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 1, delay: 0.25 }} className="font-display text-white mt-4 text-5xl sm:text-7xl">
           {data?.restaurant.name ?? "\u00a0"}
         </motion.h1>
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.1, delay: 0.6 }} className="mx-auto mt-6 h-px w-48 origin-center bg-gradient-to-r from-transparent via-amber-400 to-transparent" />
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.1, delay: 0.6 }} className="mx-auto mt-6 h-px w-48 origin-center bg-gradient-to-r from-transparent via-rose-400 to-transparent" />
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }} className="mt-5 text-sm text-neutral-400">
           {table ? `${T.table} ${table}` : "\u00a0"}
         </motion.p>
         {!lite && (
-          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 9, ease: "linear" }} className="mx-auto mt-8 h-14 w-14 rounded-full border border-amber-400/30 border-t-amber-300" />
+          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 9, ease: "linear" }} className="mx-auto mt-8 h-14 w-14 rounded-full border border-rose-400/30 border-t-rose-300" />
         )}
         <p className="mt-6 text-[11px] text-neutral-600">{T.tapToSkip}</p>
       </div>
@@ -518,7 +518,7 @@ function DishCard({ item, lang, currency, T, lite, index, onOpen }: { item: Menu
             // eslint-disable-next-line @next/next/no-img-element
             <img src={item.imageUrl} alt="" loading="lazy" className={`h-full w-full object-cover transition duration-700 group-hover:scale-105 ${!item.availableNow ? "grayscale" : ""}`} />
           ) : (
-            <div className="grid h-full place-items-center bg-gradient-to-br from-amber-900/40 to-black text-7xl">{EMOJI[item.visual]}</div>
+            <div className="grid h-full place-items-center bg-gradient-to-br from-rose-950/60 to-black text-7xl">{EMOJI[item.visual]}</div>
           )}
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -667,7 +667,7 @@ function CartDrawer({
                         <div className="min-w-0 flex-1">
                           <p className="font-medium leading-tight">{l.name}</p>
                           {l.details.length > 0 && <p className="c-muted mt-0.5 text-xs leading-snug">{l.details.join(" · ")}</p>}
-                          {l.instructions && <p className="mt-0.5 text-xs italic text-amber-300/90">“{l.instructions}”</p>}
+                          {l.instructions && <p className="mt-0.5 text-xs italic text-rose-300/90">“{l.instructions}”</p>}
                           {ql?.errors.length ? <p className="mt-1 text-xs text-red-400">{ql.errors[0]}</p> : null}
                           <div className="mt-2 flex items-center justify-between">
                             <div className="flex items-center gap-2 text-sm">

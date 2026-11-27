@@ -89,7 +89,7 @@ export default function MenuPage() {
           <div className="space-y-1">
             {[{ id: "all", name: "All dishes" }, ...data.cats].map((c) => (
               <div key={c.id} className="group flex items-center">
-                <button onClick={() => setCat(c.id)} className={`flex-1 rounded-xl px-3 py-2 text-left text-sm ${cat === c.id ? "bg-amber-500/15 text-amber-200" : "text-neutral-300 hover:bg-white/5"}`}>
+                <button onClick={() => setCat(c.id)} className={`flex-1 rounded-xl px-3 py-2 text-left text-sm ${cat === c.id ? "bg-rose-500/15 text-rose-200" : "text-neutral-300 hover:bg-white/5"}`}>
                   {c.name}
                   {c.id !== "all" && !c.active && <span className="ml-2 text-xs text-neutral-500">hidden</span>}
                   <span className="float-right text-xs text-neutral-500">{c.id === "all" ? data.items.length : data.items.filter((i) => i.categoryId === c.id).length}</span>
@@ -121,7 +121,7 @@ export default function MenuPage() {
                       </p>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {vs.length > 0 && <Badge>{vs.length} sizes</Badge>}
-                        {gs.length > 0 && <Badge tone="amber">{gs.length} option groups</Badge>}
+                        {gs.length > 0 && <Badge tone="rose">{gs.length} option groups</Badge>}
                         {it.modelAssetId && <Badge tone="violet">custom 3D model</Badge>}
                         {it.featured && <Badge tone="blue">featured</Badge>}
                         {(it.availableFrom || it.availableTo) && <Badge>{it.availableFrom}–{it.availableTo}</Badge>}
@@ -422,8 +422,8 @@ function ItemEditor({ initial, data, onClose, reload, openGroups }: { initial: R
           {data.groups.map((g) => {
             const on = links.some((l) => l.groupId === g.id);
             return (
-              <label key={g.id} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 ${on ? "border-amber-500/40 bg-amber-500/5" : "border-white/10"}`}>
-                <input type="checkbox" checked={on} onChange={() => attach(g)} className="h-4 w-4 accent-amber-500" />
+              <label key={g.id} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 ${on ? "border-rose-500/40 bg-rose-500/5" : "border-white/10"}`}>
+                <input type="checkbox" checked={on} onChange={() => attach(g)} className="h-4 w-4 accent-rose-500" />
                 <span className="flex-1">
                   <span className="text-sm text-white">{g.name}</span>
                   <span className="ml-2 text-xs text-neutral-500">
@@ -510,7 +510,7 @@ function GroupLibrary({ data, onClose }: { data: Data; onClose: () => void }) {
       <div className="grid gap-5 md:grid-cols-[200px_1fr]">
         <div className="space-y-1">
           {groups.map((x) => (
-            <button key={x.id} onClick={() => setSel(x.id)} className={`block w-full rounded-lg px-3 py-2 text-left text-sm ${sel === x.id ? "bg-amber-500/15 text-amber-200" : "text-neutral-300 hover:bg-white/5"}`}>
+            <button key={x.id} onClick={() => setSel(x.id)} className={`block w-full rounded-lg px-3 py-2 text-left text-sm ${sel === x.id ? "bg-rose-500/15 text-rose-200" : "text-neutral-300 hover:bg-white/5"}`}>
               {x.name}
               <span className="block text-[11px] text-neutral-500">
                 {x.kind} · {options.filter((o) => o.groupId === x.id).length} options
