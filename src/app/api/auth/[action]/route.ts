@@ -1,10 +1,10 @@
 import { and, eq, lt, like } from "drizzle-orm";
 import { randomBytes } from "node:crypto";
 import { db } from "@/db";
-import { users, restaurants, restaurantMembers } from "@/db/schema";
+import { users, restaurants, restaurantMembers, tables, nfcCards, branches } from "@/db/schema";
 import { body, handle, HttpError } from "@/lib/api";
 import { endSession, getSession, hashPassword, homeFor, startSession, verifyPassword } from "@/lib/auth";
-import { loadStarterMenu, provisionRestaurant } from "@/lib/seed";
+import { addStaff, loadStarterMenu, provisionRestaurant } from "@/lib/seed";
 
 const attempts = new Map<string, { n: number; reset: number }>();
 function throttle(key: string) {
@@ -60,6 +60,11 @@ export const POST = handle(async (req, ctx) => {
     try {
       const restaurant = await provisionRestaurant({ ownerId: u.id, name: `Demo Restaurant ${suffix.slice(0, 4).toUpperCase()}`, slug: `demo-${suffix}` });
       await loadStarterMenu(restaurant.id);
+      const [branch] = await db.select().from(branches).where(eq(branches.restaurantId, restaurant.id)).limit(1);
+      const demoTables = await db.insert(tables).values(Array.from({ length: 8 }, (_, i) => ({ restaurantId: restaurant.id, branchId: branch.id, code: "T" + String(i + 1).padStart(2, "0"), label: "Table " + (i + 1), seats: i % 3 === 0 ? 2 : 4 }))).returning();
+      await db.insert(nfcCards).values(demoTables.map((t) => ({ restaurantId: restaurant.id, tableId: t.id, token: randomBytes(6).toString("base64url"), label: "NFC " + t.code })));
+      await addStaff(restaurant.id, { name: "Alex Morgan · Kitchen", email: "kitchen+" + suffix + "@tapmenu.invalid", password: randomBytes(18).toString("base64url"), role: "kitchen" });
+      await addStaff(restaurant.id, { name: "Jamie Lee · Floor", email: "floor+" + suffix + "@tapmenu.invalid", password: randomBytes(18).toString("base64url"), role: "waiter" });
       await startSession(u.id);
       return { ok: true, home: "/dashboard", demo: true, restaurant: restaurant.name };
     } catch (e) {
