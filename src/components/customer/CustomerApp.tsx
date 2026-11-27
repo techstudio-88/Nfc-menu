@@ -179,7 +179,7 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
 
   const sendAssist = async (kind: string) => {
     try {
-      await api("/api/public/assist", { body: { slug, tableCode, cardToken: card, kind } });
+      const message = kind === "bill" ? "Guest is ready to pay. Please bring the bill and payment options." : ""; await api("/api/public/assist", { body: { slug, tableCode, cardToken: card, kind, message } });
       setAssistMsg(T.assistSent);
     } catch (e) {
       setAssistMsg(e instanceof Error ? e.message : "Failed");
@@ -291,30 +291,18 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
                   {lite ? "⚡ " : "✨ "}
                   {T.lite}
                 </button>
-                <button onClick={() => setAssistOpen((v) => !v)} aria-label={T.assist} aria-expanded={assistOpen} className="glass grid h-9 w-9 place-items-center rounded-full">
-                  🛎
-                </button>
+                <span className="sr-only">Use the floating Help button for table assistance.</span>
               </div>
             </div>
             <AnimatePresence>
               {assistOpen && (
-                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="glass mx-auto mt-3 max-w-3xl rounded-2xl p-3">
+                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="fixed bottom-24 right-4 z-[90] w-[min(370px,calc(100vw-2rem))] rounded-3xl border c-line bg-white/95 p-4 text-slate-900 shadow-[0_24px_80px_rgba(3,45,31,.22)] backdrop-blur-2xl">
                   {assistMsg ? (
-                    <p className="p-2 text-center text-sm">✓ {assistMsg}</p>
+                    <p className="p-3 text-center text-sm font-semibold text-emerald-800">✓ {assistMsg}</p>
                   ) : !tableCode ? (
                     <p className="p-2 text-sm">{T.needTable}</p>
                   ) : (
-                    <div className="grid grid-cols-3 gap-2 text-xs">
-                      {[
-                        ["waiter", T.needWaiter],
-                        ["bill", T.needBill],
-                        ["water", T.needWater],
-                      ].map(([k, label]) => (
-                        <button key={k} onClick={() => sendAssist(k)} className="rounded-xl border c-line p-3 hover:bg-white/10">
-                          {label}
-                        </button>
-                      ))}
-                    </div>
+                    <div><div className="mb-3 flex items-center justify-between"><div><p className="text-sm font-bold text-slate-900">How can we help?</p><p className="mt-0.5 text-xs text-slate-500">Your team will get a request for this table.</p></div><button onClick={() => setAssistOpen(false)} aria-label="Close help" className="grid h-8 w-8 place-items-center rounded-full bg-slate-100 text-slate-600">✕</button></div><div className="grid grid-cols-2 gap-2">{[["waiter","♧","Call waiter","Ask someone to visit your table"],["water","♧","Bring water","Request drinking water"],["bill","▤","Get my bill","Ask for your table bill"],["bill","₹","Ready to pay","Ask staff to bring payment options"]].map(([k, icon, label, detail], index) => (<button key={`${k}-${index}`} onClick={() => sendAssist(k)} className="group rounded-2xl border border-emerald-900/10 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-600/30 hover:bg-emerald-50"><span className="grid h-9 w-9 place-items-center rounded-xl bg-emerald-50 text-lg text-emerald-800">{icon}</span><span className="mt-2 block text-sm font-semibold text-slate-900">{label}</span><span className="mt-0.5 block text-[11px] leading-4 text-slate-500">{detail}</span></button>))}</div></div>
                   )}
                 </motion.div>
               )}
@@ -328,6 +316,7 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
             {!data.settings?.orderingEnabled && <p className="mx-auto mt-5 max-w-3xl rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-2 text-sm text-rose-100">{T.paused}</p>}
           </header>
 
+          <button onClick={() => setAssistOpen((v) => !v)} aria-label="Open table help" aria-expanded={assistOpen} className="fixed bottom-5 right-5 z-[85] inline-flex items-center gap-2 rounded-full border border-white/20 bg-gradient-to-br from-emerald-700 to-emerald-950 px-5 py-3.5 text-sm font-semibold text-white shadow-[0_12px_38px_rgba(3,74,49,.35)] transition hover:-translate-y-1 hover:shadow-[0_18px_48px_rgba(3,74,49,.42)] active:scale-95"><span className="grid h-7 w-7 place-items-center rounded-full bg-white/15 text-base">?</span> Help</button>
           {/* category navigation */}
           <nav className="sticky top-0 z-30 border-y c-line bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur-xl" aria-label="Categories">
             <div className="no-scrollbar mx-auto flex max-w-3xl gap-1 overflow-x-auto px-3">
