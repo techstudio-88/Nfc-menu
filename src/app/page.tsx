@@ -72,6 +72,7 @@ export default function Home() {
                 <p className="mt-7 max-w-[360px] text-[12px] leading-[1.95] text-[#c8c2b9]/75 sm:text-[13px]">A simple tap opens a world of flavour. Give your guests a beautifully branded digital menu, interactive 3D dishes and a smoother way to order.</p>
                 <div className="mt-8 flex flex-wrap items-center gap-5">
                   <Link href={demo ? "/r/ember-crust?table=T04" : "/signup"} className="senso-red-button px-6 py-4 text-[9px] font-semibold tracking-[.1em]">EXPLORE LIVE MENU</Link>
+                  <Link href={demo ? "/r/ember-crust?table=T04" : "/signup"} className="inline-flex items-center gap-2 border border-white/25 bg-black/25 px-6 py-4 text-[9px] font-semibold tracking-[.1em] text-white/85 backdrop-blur transition hover:border-[#e45b65] hover:bg-[#8f2338]/25 hover:text-white"> <span aria-hidden="true">▶</span> TRY DEMO</Link>
                   <Link href="/signup" className="group inline-flex items-center gap-3 text-[9px] font-semibold tracking-[.1em] text-white/85">CREATE YOUR RESTAURANT <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/70 text-[9px] transition group-hover:border-[#d84b56] group-hover:bg-[#d84b56]">↗</span></Link>
                 </div>
                 <div className="mt-8 flex flex-wrap gap-5 text-[9px] tracking-[.15em] text-white/35"><span>NFC ENABLED</span><span>·</span><span>INTERACTIVE 3D</span><span>·</span><span>LIVE ORDERS</span></div>
