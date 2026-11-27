@@ -545,3 +545,22 @@ body {
 /* One crimson brand palette across guest menu, menu studio and all panels */
 :root { --tm-crimson:#d94355; --tm-crimson-deep:#861b30; --tm-crimson-soft:#f18b96; }
 .gold-text { background:linear-gradient(100deg,#ffd4d7,#ed6673 48%,#9d2038); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+
+/* Final brand lock: crimson only, including legacy accents and hero chrome */
+:root { --tm-brand:#d94358; --tm-brand-strong:#f07883; --tm-brand-deep:#74172a; }
+.senso-frame { border-color:rgba(217,67,88,.42); background:linear-gradient(145deg,rgba(22,10,14,.94),rgba(9,7,9,.94)); }
+.senso-hero { background:radial-gradient(ellipse at 78% 45%,rgba(143,25,49,.12),transparent 46%); }
+.senso-photo-shade { background:linear-gradient(90deg,#0c090b 0%,rgba(12,9,11,.97) 18%,rgba(12,9,11,.72) 42%,rgba(12,9,11,.08) 78%),linear-gradient(0deg,rgba(0,0,0,.45),transparent 44%); }
+.senso-highlights { border-color:rgba(217,67,88,.18); }
+.senso-line-icon { border-color:rgba(217,67,88,.28); color:#f07883; }
+.senso-wordmark { color:#f6e9eb; }
+.senso-heading em { color:#f07883; }
+.senso-gold-button { color:#fff4f6; background:linear-gradient(115deg,#7e1b30,#c2384d 52%,#8f2037); border-color:rgba(240,120,135,.36); }
+.senso-page [class*="text-amber-"],.senso-page [class*="text-yellow-"],.senso-page [class*="text-orange-"] { color:#f07883!important; }
+.senso-page [class*="bg-amber-"],.senso-page [class*="bg-yellow-"],.senso-page [class*="bg-orange-"] { background-color:rgba(217,67,88,.14)!important; }
+.senso-page [class*="border-amber-"],.senso-page [class*="border-yellow-"],.senso-page [class*="border-orange-"] { border-color:rgba(217,67,88,.34)!important; }
+.tm-shell [class*="text-amber-"],.tm-shell [class*="text-yellow-"],.tm-shell [class*="text-orange-"] { color:#f07883!important; }
+.tm-shell [class*="bg-amber-"],.tm-shell [class*="bg-yellow-"],.tm-shell [class*="bg-orange-"] { background-color:rgba(217,67,88,.14)!important; }
+.tm-shell [class*="border-amber-"],.tm-shell [class*="border-yellow-"],.tm-shell [class*="border-orange-"] { border-color:rgba(217,67,88,.34)!important; }
+@media (max-width:639px) { .senso-hero-proof { display:none!important; } .senso-hero { min-height:600px; } }

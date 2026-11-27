@@ -66,13 +66,15 @@ export default function Home() {
           <div className="senso-frame relative mx-auto flex min-h-[min(82vh,850px)] w-full max-w-[1440px] flex-col overflow-hidden">
             <div className="senso-hero relative flex flex-1 items-center overflow-hidden px-6 pb-12 pt-12 sm:px-10 lg:px-14 lg:py-12">
               <div className="senso-dish-photo" role="img" aria-label="Fine dining dish served on a ceramic plate" />
-              <div className="senso-photo-shade" />\n              <div className="relative z-10 max-w-[490px] py-10 lg:py-14">
-                <p className="mb-5 text-[9px] font-semibold tracking-[.18em] text-[#e56a70] sm:text-[10px]">THE NEXT CHAPTER OF DINING</p>
-                <h1 className="senso-heading text-[3.4rem] leading-[.99] tracking-[-.045em] sm:text-6xl lg:text-[4.6rem]">Every Table.<br /><em>Something Special.</em></h1>
-                <p className="mt-7 max-w-[360px] text-[12px] leading-[1.95] text-[#c8c2b9]/75 sm:text-[13px]">A simple tap opens a world of flavour. Give your guests a beautifully branded digital menu, interactive 3D dishes and a smoother way to order.</p>
+              <div className="senso-photo-shade" />
+              <div className="senso-hero-proof absolute bottom-7 right-7 z-10 hidden items-center gap-3 rounded-2xl border border-rose-300/20 bg-[#13090d]/75 px-4 py-3 shadow-[0_16px_50px_rgba(0,0,0,.35)] backdrop-blur-xl xl:flex"><span className="grid h-9 w-9 place-items-center rounded-xl bg-rose-500/15 text-lg text-rose-200">✦</span><span><span className="block text-[9px] font-semibold tracking-[.16em] text-rose-100">BUILT FOR MODERN DINING</span><span className="mt-1 block text-[10px] text-white/45">NFC · 3D · LIVE ORDERING</span></span><span className="ml-3 h-2 w-2 rounded-full bg-rose-300 shadow-[0_0_14px_#fb7185]"></span></div>
+              <div className="relative z-10 max-w-[490px] py-10 lg:py-14">
+                <p className="mb-5 text-[9px] font-semibold tracking-[.18em] text-[#e56a70] sm:text-[10px]">THE DIGITAL DINING EXPERIENCE, REIMAGINED</p>
+                <h1 className="senso-heading text-[3.4rem] leading-[.99] tracking-[-.045em] sm:text-6xl lg:text-[4.6rem]">Your Menu.<br /><em>Reimagined.</em></h1>
+                <p className="mt-7 max-w-[360px] text-[12px] leading-[1.95] text-[#c8c2b9]/75 sm:text-[13px]">Turn every table into an interactive experience. Guests tap, explore vivid dish previews, customise every detail and order — while your team stays in sync.</p>
                 <div className="mt-8 flex flex-wrap items-center gap-5">
-                  <Link href={demo ? "/r/ember-crust?table=T04" : "/signup"} className="senso-red-button px-6 py-4 text-[9px] font-semibold tracking-[.1em]">EXPLORE LIVE MENU</Link>
-                  <Link href="/demo" className="inline-flex items-center gap-2 border border-white/25 bg-black/25 px-6 py-4 text-[9px] font-semibold tracking-[.1em] text-white/85 backdrop-blur transition hover:border-[#e45b65] hover:bg-[#8f2338]/25 hover:text-white"> <span aria-hidden="true">▶</span> LAUNCH A FRESH DEMO WORKSPACE</Link>
+                  <Link href={demo ? "/r/ember-crust?table=T04" : "/signup"} className="senso-red-button px-6 py-4 text-[9px] font-semibold tracking-[.1em]">EXPLORE THE LIVE MENU</Link>
+                  <Link href="/demo" className="inline-flex items-center gap-2 border border-white/25 bg-black/25 px-6 py-4 text-[9px] font-semibold tracking-[.1em] text-white/85 backdrop-blur transition hover:border-[#e45b65] hover:bg-[#8f2338]/25 hover:text-white"> <span aria-hidden="true">▶</span> LAUNCH INTERACTIVE DEMO</Link>
                   <Link href="/signup" className="group inline-flex items-center gap-3 text-[9px] font-semibold tracking-[.1em] text-white/85">CREATE YOUR RESTAURANT <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/70 text-[9px] transition group-hover:border-[#d84b56] group-hover:bg-[#d84b56]">↗</span></Link>
                 </div>
                 <div className="mt-8 flex flex-wrap gap-5 text-[9px] tracking-[.15em] text-white/35"><span>NFC ENABLED</span><span>·</span><span>INTERACTIVE 3D</span><span>·</span><span>LIVE ORDERS</span></div>

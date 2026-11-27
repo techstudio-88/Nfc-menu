@@ -96,10 +96,11 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
   );
 }
 
-export function Badge({ children, tone = "neutral" }: { children: ReactNode; tone?: "neutral" | "amber" | "green" | "red" | "blue" | "violet" }) {
+export function Badge({ children, tone = "neutral" }: { children: ReactNode; tone?: "neutral" | "amber" | "rose" | "green" | "red" | "blue" | "violet" }) {
   const t = {
     neutral: "bg-white/5 text-neutral-300 border-white/10",
     amber: "bg-rose-500/10 text-rose-300 border-rose-500/30",
+    rose: "bg-rose-500/10 text-rose-300 border-rose-500/30",
     green: "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
     red: "bg-red-500/10 text-red-300 border-red-500/30",
     blue: "bg-sky-500/10 text-sky-300 border-sky-500/30",
@@ -108,7 +109,7 @@ export function Badge({ children, tone = "neutral" }: { children: ReactNode; ton
   return <span className={cx("inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium", t)}>{children}</span>;
 }
 
-export const STATUS_TONE: Record<string, "neutral" | "amber" | "green" | "red" | "blue" | "violet"> = {
+export const STATUS_TONE: Record<string, "neutral" | "amber" | "rose" | "green" | "red" | "blue" | "violet"> = {
   placed: "amber",
   accepted: "blue",
   preparing: "violet",
