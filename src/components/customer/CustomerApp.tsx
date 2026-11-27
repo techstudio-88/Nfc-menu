@@ -191,8 +191,8 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
   };
 
   const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 320], [0, 90]);
-  const heroO = useTransform(scrollY, [0, 280], [1, 0.15]);
+  const heroY = useTransform(scrollY, [0, 320], [0, 24]);
+  const heroO = useTransform(scrollY, [0, 280], [1, 1]);
 
   /* ───── states ───── */
   if (err && !data) {
@@ -244,7 +244,7 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
       ) : data ? (
         <>
           {/* hero */}
-          <header className="relative isolate overflow-hidden px-5 pb-8 pt-[max(1.25rem,env(safe-area-inset-top))]">
+          <header className="relative isolate overflow-hidden px-5 pb-8 pt-[max(1.25rem,env(safe-area-inset-top))] sm:pb-12">
             {data.restaurant.coverUrl && (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={data.restaurant.coverUrl} alt="" className="absolute inset-0 -z-20 h-full w-full object-cover opacity-30" />
@@ -307,10 +307,10 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
                 </motion.div>
               )}
             </AnimatePresence>
-            <motion.div style={lite ? undefined : { y: heroY, opacity: heroO }} className="mx-auto mt-10 max-w-3xl">
+            <motion.div style={lite ? undefined : { y: heroY, opacity: heroO }} className="mx-auto mt-8 max-w-3xl sm:mt-12">
               <p className="c-muted text-[11px] uppercase tracking-[0.35em]">{T.welcome}</p>
-              <h1 className="font-display mt-2 text-5xl leading-[0.95] sm:text-7xl">{data.restaurant.name}</h1>
-              {data.restaurant.tagline && <p className="c-muted mt-3 max-w-md text-base italic">{data.restaurant.tagline}</p>}
+              <h1 className="font-display mt-3 max-w-full break-words text-[clamp(2.65rem,11vw,4.6rem)] leading-[0.98] tracking-tight sm:text-7xl">{data.restaurant.name}</h1>
+              {data.restaurant.tagline && <p className="c-muted mt-4 max-w-md text-sm leading-6 italic sm:text-base">{data.restaurant.tagline}</p>}
             </motion.div>
             {cardBlocked && <p className="mx-auto mt-5 max-w-3xl rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm text-red-200">This NFC card has been deactivated — you can browse the menu, but ordering is disabled.</p>}
             {!data.settings?.orderingEnabled && <p className="mx-auto mt-5 max-w-3xl rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-2 text-sm text-rose-100">{T.paused}</p>}
@@ -475,6 +475,7 @@ function DishCard({ item, lang, currency, T, lite, index, onOpen }: { item: Menu
   const px = useTransform(mx, [-0.5, 0.5], [-10, 10]);
   const py = useTransform(my, [-0.5, 0.5], [-8, 8]);
   const ref = useRef<HTMLButtonElement>(null);
+  const [imageFailed, setImageFailed] = useState(false);
   const custom = item.variants.length > 0 || item.groups.length > 0;
   const has3d = item.visual !== "generic" || !!item.modelUrl;
   const from = item.variants.length ? Math.min(...item.variants.filter((v) => v.available).map((v) => v.priceDelta), 0) + item.basePrice : item.basePrice;
@@ -501,13 +502,13 @@ function DishCard({ item, lang, currency, T, lite, index, onOpen }: { item: Menu
       whileTap={{ scale: 0.985 }}
       className={`c-card group relative overflow-hidden rounded-[1.75rem] border c-line text-left transition-shadow hover:shadow-[0_30px_60px_-30px_var(--brand)] ${!item.availableNow ? "opacity-60" : ""}`}
     >
-      <div className="relative aspect-[5/4] overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden bg-[radial-gradient(ellipse_at_50%_35%,color-mix(in_srgb,var(--brand)_24%,transparent),transparent_70%),linear-gradient(145deg,color-mix(in_srgb,var(--card)_75%,#fff),var(--card))] sm:aspect-[5/4]">
         <motion.div style={lite ? undefined : { x: px, y: py, scale: 1.12 }} className="absolute inset-0">
-          {item.imageUrl ? (
+          {item.imageUrl && !imageFailed ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={item.imageUrl} alt="" loading="lazy" className={`h-full w-full object-cover transition duration-700 group-hover:scale-105 ${!item.availableNow ? "grayscale" : ""}`} />
+            <img src={item.imageUrl} alt={tr(item, lang)} loading="lazy" onError={() => setImageFailed(true)} className={`h-full w-full object-cover transition duration-700 group-hover:scale-105 ${!item.availableNow ? "grayscale" : ""}`} />
           ) : (
-            <div className="grid h-full place-items-center bg-gradient-to-br from-rose-950/60 to-black text-7xl">{EMOJI[item.visual]}</div>
+            <div className="relative grid h-full place-items-center overflow-hidden bg-[radial-gradient(ellipse_at_50%_42%,color-mix(in_srgb,var(--brand)_38%,transparent),transparent_58%)]"><span className="absolute h-44 w-44 rounded-full border border-white/10 bg-white/[.03] shadow-[0_0_70px_color-mix(in_srgb,var(--brand)_25%,transparent)]" /><span className="relative z-10 drop-shadow-[0_18px_24px_rgba(0,0,0,.28)]" style={{fontSize:"clamp(5rem,24vw,9rem)"}}>{EMOJI[item.visual] ?? EMOJI.generic}</span><span className="absolute bottom-4 text-[9px] font-semibold tracking-[.25em] text-[var(--muted)]/80">MADE FRESH FOR YOU</span></div>
           )}
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -516,15 +517,15 @@ function DishCard({ item, lang, currency, T, lite, index, onOpen }: { item: Menu
           {custom && <span className="glass rounded-full px-2.5 py-1 text-white">{T.customise}</span>}
         </div>
         {!item.availableNow && <span className="absolute right-3 top-3 rounded-full bg-red-600 px-2.5 py-1 text-[10px] font-semibold uppercase text-white">{T.soldOut}</span>}
-        <div className="absolute inset-x-4 bottom-3 flex items-end justify-between" style={lite ? undefined : { transform: "translateZ(40px)" }}>
-          <h3 className="font-display text-2xl leading-none text-white drop-shadow-lg">{tr(item, lang)}</h3>
+        <div className="absolute inset-x-4 bottom-3 flex items-end justify-between gap-3" style={lite ? undefined : { transform: "translateZ(40px)" }}>
+          <h3 className="font-display min-w-0 text-xl leading-[1.05] text-white drop-shadow-lg sm:text-2xl">{tr(item, lang)}</h3>
           <span className="c-brand-grad rounded-full px-3 py-1.5 text-sm font-semibold tabular-nums">
             {item.variants.length ? "from " : ""}
             {formatMoney(from, currency)}
           </span>
         </div>
       </div>
-      <p className="c-muted line-clamp-2 px-4 py-3.5 text-sm leading-relaxed">{trDesc(item, lang)}</p>
+      <p className="c-muted line-clamp-2 px-4 py-3 text-[13px] leading-6 sm:px-5 sm:py-4 sm:text-sm">{trDesc(item, lang)}</p>
     </motion.button>
   );
 }
