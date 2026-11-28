@@ -42,14 +42,39 @@ export function MoneyInput({ value, onChange, className, ...rest }: { value: num
   );
 }
 
+async function optimizeImage(file: File) {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, 1920 / Math.max(bitmap.width, bitmap.height));
+  const width = Math.max(1, Math.round(bitmap.width * scale));
+  const height = Math.max(1, Math.round(bitmap.height * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = width; canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Image editor is unavailable in this browser.");
+  ctx.drawImage(bitmap, 0, 0, width, height); bitmap.close();
+  const main = await new Promise<Blob>((resolve, reject) => canvas.toBlob((b) => b ? resolve(b) : reject(new Error("Could not compress image.")), "image/webp", 0.82));
+  const size = Math.min(width, height);
+  const thumbCanvas = document.createElement("canvas"); thumbCanvas.width = 480; thumbCanvas.height = 480;
+  const thumbCtx = thumbCanvas.getContext("2d");
+  if (!thumbCtx) throw new Error("Thumbnail editor is unavailable.");
+  thumbCtx.drawImage(canvas, (width-size)/2, (height-size)/2, size, size, 0, 0, 480, 480);
+  const thumbnail = await new Promise<Blob>((resolve, reject) => thumbCanvas.toBlob((b) => b ? resolve(b) : reject(new Error("Could not create thumbnail.")), "image/webp", 0.76));
+  return { main, thumbnail };
+}
+
 export async function uploadAsset(file: File, kind: "image" | "model" | "logo") {
   const fd = new FormData();
-  fd.append("file", file);
+  if (kind === "model") fd.append("file", file);
+  else {
+    const optimized = await optimizeImage(file);
+    fd.append("file", new File([optimized.main], file.name.replace(/\\.[^.]+$/, ".webp"), { type: "image/webp" }));
+    fd.append("thumbnail", new File([optimized.thumbnail], "thumbnail.webp", { type: "image/webp" }));
+  }
   fd.append("kind", kind);
   const res = await fetch("/api/assets", { method: "POST", body: fd });
   const j = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(j.error ?? "Upload failed");
-  return j as { id: string; url: string };
+  return j as { id: string; url: string; thumbnailUrl?: string | null; storage?: string };
 }
 
 export function AssetUpload({ kind, label, assetId, url, onChange }: { kind: "image" | "model" | "logo"; label: string; assetId: string | null; url?: string | null; onChange: (id: string | null) => void }) {
