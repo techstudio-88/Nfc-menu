@@ -12,6 +12,11 @@ type A = {
   popular: { name: string; qty: number; revenue: number }[];
   byMethod: { method: string; status: string; amount: number; n: number }[];
   payments: { id: string; orderNo: number; tableCode: string; method: string; provider: string; amount: number; currency: string; status: string; createdAt: string; paidAt: string | null }[];
+  tableRevenue: { tableCode: string; orders: number; revenue: number }[];
+  peakHours: { hour: number; orders: number; revenue: number }[];
+  branchComparison: { branchId: string | null; branchName: string; orders: number; revenue: number }[];
+  repeatCustomers: { customers: number; orders: number };
+  costs: { foodCost: number; sales: number; grossProfit: number; marginPercent: number; configured: boolean };
 };
 
 const csv = (name: string, rows: (string | number)[][]) => {
@@ -48,6 +53,33 @@ export default function Reports() {
         <Stat label="Gross sales" value={formatMoney(d.range.revenue, d.currency)} sub={`avg ${formatMoney(d.range.avgOrder, d.currency)}`} />
         <Stat label="Collected" value={formatMoney(paid, d.currency)} sub={`${formatMoney(pending, d.currency)} outstanding`} />
         <Stat label="Tax / service / discounts" value={formatMoney(d.range.tax, d.currency)} sub={`service ${formatMoney(d.range.service, d.currency)} · discounts ${formatMoney(d.range.discount, d.currency)}`} />
+      </div>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Stat label="Food cost" value={formatMoney(d.costs.foodCost, d.currency)} sub={d.costs.configured ? "Recipe-based ingredient cost" : "Add recipes to inventory items"} />
+        <Stat label="Gross profit" value={formatMoney(d.costs.grossProfit, d.currency)} sub="Sales less configured food cost" />
+        <Stat label="Gross margin" value={d.costs.configured ? `${d.costs.marginPercent}%` : "—"} sub="Before labour, rent and overheads" />
+        <Stat label="Repeat customers" value={d.repeatCustomers.customers} sub={`${d.repeatCustomers.orders} orders from repeat visitors`} />
+      </div>
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <Card>
+          <h2 className="font-display text-2xl text-ink">Revenue by table</h2>
+          <div className="mt-3 space-y-2">{d.tableRevenue.length ? d.tableRevenue.map((x) => <div key={x.tableCode} className="flex items-center justify-between gap-3 text-sm"><span className="font-medium text-ink">{x.tableCode || "Unassigned"}</span><span className="text-mute">{x.orders} orders</span><span className="font-semibold text-ink">{formatMoney(x.revenue,d.currency)}</span></div>) : <p className="text-sm text-mute">No table revenue yet.</p>}</div>
+          <Button size="sm" variant="subtle" className="mt-3" onClick={() => csv(`tables-${days}d.csv`, [["Table","Orders","Revenue"], ...d.tableRevenue.map((x) => [x.tableCode,x.orders,(x.revenue/100).toFixed(2)])])}>Export table report</Button>
+        </Card>
+        <Card>
+          <h2 className="font-display text-2xl text-ink">Peak hours</h2>
+          <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6">{Array.from({length:24},(_,hour)=>{const row=d.peakHours.find(x=>x.hour===hour);const max=Math.max(1,...d.peakHours.map(x=>x.orders));return <div key={hour} className="text-center"><div className="flex h-20 items-end justify-center rounded-lg bg-porcelain p-1"><span className="w-full rounded-md bg-brand" style={{height:`${Math.max(4,((row?.orders??0)/max)*100)}%`}} /></div><p className="mt-1 text-[10px] text-mute">{String(hour).padStart(2,"0")}:00</p><p className="text-xs font-semibold text-ink">{row?.orders??0}</p></div>})}</div>
+        </Card>
+        <Card>
+          <h2 className="font-display text-2xl text-ink">Branch comparison</h2>
+          <div className="mt-3 space-y-3">{d.branchComparison.length ? d.branchComparison.map((x) => <div key={x.branchId ?? "none"} className="flex items-center justify-between gap-3 text-sm"><span className="font-medium text-ink">{x.branchName}</span><span className="text-mute">{x.orders} orders</span><span className="font-semibold text-ink">{formatMoney(x.revenue,d.currency)}</span></div>) : <p className="text-sm text-mute">No branch activity yet.</p>}</div>
+        </Card>
+        <Card>
+          <h2 className="font-display text-2xl text-ink">Food cost & margins</h2>
+          <p className="mt-2 text-sm text-mute">{d.costs.configured ? "Recipe costs are snapshotted when each order is placed." : "Set ingredient recipes to unlock reliable food-cost and gross-margin reporting."}</p>
+          <p className="mt-3 font-display text-3xl text-ink">{d.costs.configured ? `${d.costs.marginPercent}%` : "Not configured"}</p>
+          <a href="/dashboard/costing" className="mt-3 inline-flex text-sm font-semibold text-brand underline-offset-4 hover:underline">Manage dish recipes ↗</a>
+        </Card>
       </div>
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_2fr]">
         <div className="space-y-6">

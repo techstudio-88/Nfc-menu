@@ -21,6 +21,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
         { href: "/dashboard/team", label: "Team & kitchen", icon: "👥" },
         { href: "/dashboard/reports", label: "Reports", icon: "📈" },
         { href: "/dashboard/inventory", label: "Inventory", icon: "📦" },
+        { href: "/dashboard/costing", label: "Costing & recipes", icon: "🧮" },
         { href: "/dashboard/settings", label: "Settings", icon: "⚙" },
         { href: "/kitchen", label: "Kitchen display ↗", icon: "🍳" },
         { href: "/staff", label: "Floor panel ↗", icon: "🛎" },

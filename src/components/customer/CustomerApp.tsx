@@ -18,6 +18,20 @@ type PublicMenu = {
   menu?: MenuTree;
 };
 
+function guestCustomerKey(slug: string) {
+  const key = `tm-guest-id-${slug}`;
+  let value = localStorage.getItem(key);
+  if (!value) { value = crypto.randomUUID(); localStorage.setItem(key, value); }
+  return value;
+}
+
+function guestCustomerKey(slug: string) {
+  const key = `tm-guest-id-${slug}`;
+  let value = localStorage.getItem(key);
+  if (!value) { value = crypto.randomUUID(); localStorage.setItem(key, value); }
+  return value;
+}
+
 const THEMES: Record<string, Record<string, string>> = {
   porcelain: { "--bg": "#faf6f1", "--fg": "#1f1416", "--muted": "#7a6a6c", "--card": "#ffffff", "--line": "rgba(80,20,30,.12)" },
   midnight: { "--bg": "#0b0b0b", "--fg": "#f5f1ea", "--muted": "#a39b8f", "--card": "#151413", "--line": "rgba(255,255,255,.11)" },
@@ -612,7 +626,7 @@ function CartDrawer({
     if (!keyRef.current || keyRef.current.sig !== sig) keyRef.current = { sig, key: crypto.randomUUID() };
     setPlacing(true);
     try {
-      const r = await api<{ token: string }>("/api/public/orders", { body: { slug, items: payload, couponCode: applied, tableCode, cardToken, clientKey: keyRef.current.key, notes, paymentMethod: method, language: lang } });
+      const r = await api<{ token: string }>("/api/public/orders", { body: { slug, items: payload, couponCode: applied, tableCode, cardToken, clientKey: keyRef.current.key, customerKey: guestCustomerKey(slug), notes, paymentMethod: method, language: lang } });
       if (method === "online") {
         const c = await api<{ url: string }>(`/api/public/orders/${r.token}`, { body: { action: "checkout" } });
         window.location.href = c.url;

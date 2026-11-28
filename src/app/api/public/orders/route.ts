@@ -7,7 +7,7 @@ import { placeOrder, type OrderInput } from "@/lib/orders";
 const recent = new Map<string, number[]>();
 
 export const POST = handle(async (req) => {
-  const b = await body<OrderInput & { slug: string; tableCode?: string; cardToken?: string; clientKey: string; notes?: string; paymentMethod: string; language?: string }>(req);
+  const b = await body<OrderInput & { slug: string; tableCode?: string; cardToken?: string; clientKey: string; customerKey?: string; notes?: string; paymentMethod: string; language?: string }>(req);
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0] ?? "local";
   const now = Date.now();
   const hits = (recent.get(ip) ?? []).filter((t) => now - t < 60_000);
@@ -22,6 +22,7 @@ export const POST = handle(async (req) => {
     tableCode: b.tableCode,
     cardToken: b.cardToken,
     clientKey: String(b.clientKey ?? ""),
+    customerKey: String(b.customerKey ?? ""),
     notes: b.notes,
     paymentMethod: String(b.paymentMethod ?? ""),
     language: b.language,

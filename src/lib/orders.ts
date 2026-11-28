@@ -1,4 +1,4 @@
-import { randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { and, asc, desc, eq, gte, inArray, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
@@ -10,6 +10,8 @@ import {
   employees,
   kitchenOrderItems,
   kitchenStations,
+  inventoryItems,
+  menuItemRecipes,
   menuCategories,
   menuItemCustomizationGroups,
   menuItemVariants,
@@ -179,6 +181,7 @@ export async function loadMenuTree(restaurantId: string, timezone: string): Prom
 export type OrderInput = {
   items: { itemId: string; variantId?: string | null; qty: number; instructions?: string; selections?: Selection[] }[];
   couponCode?: string | null;
+  customerKey?: string;
 };
 
 export type QuoteLine = {
@@ -316,6 +319,8 @@ export async function placeOrder(
   const table = tr.table;
 
   const token = randomBytes(9).toString("base64url");
+  const guestKey = String(input.customerKey ?? "").trim().slice(0, 128);
+  const customerKey = guestKey ? createHash("sha256").update(guestKey).digest("hex") : null;
   const status = q.settings.autoAccept ? "accepted" : "placed";
 
   const created = await db.transaction(async (tx) => {
@@ -342,6 +347,7 @@ export async function placeOrder(
         orderNo,
         publicToken: token,
         clientKey: input.clientKey,
+        customerKey,
         status,
         subtotal: q.totals.subtotal,
         discount: q.totals.discount,
@@ -359,6 +365,8 @@ export async function placeOrder(
       .returning();
 
     for (const l of q.lines) {
+      const recipeCosts = await tx.select({ quantity: menuItemRecipes.quantityPerItem, cost: inventoryItems.costPerUnit }).from(menuItemRecipes).innerJoin(inventoryItems, eq(menuItemRecipes.inventoryItemId, inventoryItems.id)).where(and(eq(menuItemRecipes.restaurantId, restaurantId), eq(menuItemRecipes.menuItemId, l.itemId), eq(inventoryItems.active, true)));
+      const unitCostSnapshot = recipeCosts.reduce((sum, r) => sum + r.quantity * r.cost, 0);
       const [oi] = await tx
         .insert(orderItems)
         .values({
@@ -370,6 +378,7 @@ export async function placeOrder(
           unitPrice: l.unitPrice,
           quantity: l.qty,
           lineTotal: l.lineTotal,
+          unitCostSnapshot,
           instructions: l.instructions,
           stationId: l.stationId,
           stationName: l.stationName,

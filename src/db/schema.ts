@@ -338,6 +338,7 @@ export const orders = pgTable(
     orderNo: integer("order_no").notNull(),
     publicToken: text("public_token").notNull().unique(),
     clientKey: text("client_key").notNull(),
+    customerKey: text("customer_key"),
     status: text("status").notNull().default("placed"), // placed | accepted | preparing | ready | served | completed | cancelled
     subtotal: integer("subtotal").notNull(),
     discount: integer("discount").notNull().default(0),
@@ -358,6 +359,7 @@ export const orders = pgTable(
   },
   (t) => [
     uniqueIndex("orders_no_unique").on(t.restaurantId, t.orderNo),
+    index("orders_customer_idx").on(t.restaurantId, t.customerKey),
     uniqueIndex("orders_client_key_unique").on(t.restaurantId, t.clientKey),
     index("orders_rest_status_idx").on(t.restaurantId, t.status),
     index("orders_rest_created_idx").on(t.restaurantId, t.createdAt),
@@ -378,6 +380,7 @@ export const orderItems = pgTable(
     unitPrice: integer("unit_price").notNull(),
     quantity: integer("quantity").notNull(),
     lineTotal: integer("line_total").notNull(),
+    unitCostSnapshot: integer("unit_cost_snapshot").notNull().default(0),
     instructions: text("instructions").notNull().default(""),
     stationId: uuid("station_id").references(() => kitchenStations.id, { onDelete: "set null" }),
     stationName: text("station_name").notNull().default(""),
@@ -598,5 +601,18 @@ export const workspaceAccessRequests = pgTable(
 );
 
 export const inventoryItems = pgTable("inventory_items", { id: id(), restaurantId: rid(), name: text("name").notNull(), unit: text("unit").notNull().default("pcs"), stock: integer("stock").notNull().default(0), lowStockAt: integer("low_stock_at").notNull().default(5), costPerUnit: integer("cost_per_unit").notNull().default(0), active: boolean("active").notNull().default(true), createdAt: created(), updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow() }, (t) => [index("inventory_items_restaurant_idx").on(t.restaurantId, t.active, t.name)]);
+
+export const menuItemRecipes = pgTable(
+  "menu_item_recipes",
+  {
+    id: id(),
+    restaurantId: rid(),
+    menuItemId: uuid("menu_item_id").notNull().references(() => menuItems.id, { onDelete: "cascade" }),
+    inventoryItemId: uuid("inventory_item_id").notNull().references(() => inventoryItems.id, { onDelete: "cascade" }),
+    quantityPerItem: integer("quantity_per_item").notNull(),
+    createdAt: created(),
+  },
+  (t) => [uniqueIndex("menu_item_recipes_unique").on(t.menuItemId, t.inventoryItemId), index("menu_item_recipes_rest_idx").on(t.restaurantId, t.menuItemId)],
+);
 
 export const _pk = primaryKey; // keep import used for future composite keys
