@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import { PRESETS, MENU_THEMES, themeColors, normalizeTheme } from "@/lib/theme";
 import { useEffect, useState } from "react";
 import { api, playSound, unlockAudio } from "@/lib/client";
 import { LANGS } from "@/lib/i18n";
@@ -51,14 +52,27 @@ export default function Settings() {
               <AssetUpload kind="logo" label="Logo" assetId={r.logoAssetId} onChange={(id) => { setR({ ...r, logoAssetId: id }); void save({ logoAssetId: id }, "Logo updated"); }} />
               <AssetUpload kind="image" label="Cover image" assetId={r.coverAssetId} onChange={(id) => { setR({ ...r, coverAssetId: id }); void save({ coverAssetId: id }, "Cover updated"); }} />
             </div>
+            <Field label="Colour palette">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {PRESETS.map((pr) => {
+                  const on = themeColors(r.primaryColor, r.accentColor).primary.toLowerCase() === pr.primary;
+                  return (
+                    <button key={pr.id} type="button" onClick={() => setR({ ...r, primaryColor: pr.primary, accentColor: pr.accent })} aria-pressed={on} className={`flex items-center gap-2 rounded-xl border p-2.5 text-left text-xs transition hover:-translate-y-0.5 ${on ? "border-brand ring-4 ring-brand/15" : "border-line"}`}>
+                      <span className="flex -space-x-1.5"><span className="h-6 w-6 rounded-full border-2 border-white" style={{ background: pr.primary }} /><span className="h-6 w-6 rounded-full border-2 border-white" style={{ background: pr.accent }} /></span>
+                      <span className="text-ink">{pr.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </Field>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Primary colour"><div className="flex gap-2"><input type="color" aria-label="Primary colour" value={r.primaryColor ?? "#f59e0b"} onChange={(e) => setR({ ...r, primaryColor: e.target.value })} className="h-10 w-14 rounded-lg border border-white/10 bg-transparent" /><Input value={r.primaryColor ?? ""} onChange={(e) => setR({ ...r, primaryColor: e.target.value })} /></div></Field>
-              <Field label="Accent colour"><div className="flex gap-2"><input type="color" aria-label="Accent colour" value={r.accentColor ?? "#ea580c"} onChange={(e) => setR({ ...r, accentColor: e.target.value })} className="h-10 w-14 rounded-lg border border-white/10 bg-transparent" /><Input value={r.accentColor ?? ""} onChange={(e) => setR({ ...r, accentColor: e.target.value })} /></div></Field>
+              <Field label="Primary colour"><div className="flex gap-2"><input type="color" aria-label="Primary colour" value={themeColors(r.primaryColor, r.accentColor).primary} onChange={(e) => setR({ ...r, primaryColor: e.target.value })} className="h-10 w-14 rounded-lg border border-line bg-transparent" /><Input value={r.primaryColor ?? ""} onChange={(e) => setR({ ...r, primaryColor: e.target.value })} /></div></Field>
+              <Field label="Accent colour"><div className="flex gap-2"><input type="color" aria-label="Accent colour" value={themeColors(r.primaryColor, r.accentColor).accent} onChange={(e) => setR({ ...r, accentColor: e.target.value })} className="h-10 w-14 rounded-lg border border-line bg-transparent" /><Input value={r.accentColor ?? ""} onChange={(e) => setR({ ...r, accentColor: e.target.value })} /></div></Field>
             </div>
-            <Field label="Menu theme">
-              <div className="grid grid-cols-3 gap-2">
-                {[["noir", "Noir", "#0b0b0b"], ["ember", "Ember", "#120a06"], ["ivory", "Ivory", "#faf6ee"]].map(([k, n, bg]) => (
-                  <button key={k} onClick={() => setR({ ...r, theme: k })} aria-pressed={r.theme === k} className={`rounded-xl border p-3 text-sm ${r.theme === k ? "border-amber-400 ring-2 ring-amber-400/30" : "border-white/10"}`} style={{ background: bg, color: k === "ivory" ? "#222" : "#eee" }}>{n}</button>
+            <Field label="Guest menu theme">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {MENU_THEMES.map((m) => (
+                  <button key={m.id} type="button" onClick={() => setR({ ...r, theme: m.id })} aria-pressed={normalizeTheme(r.theme) === m.id} className={`rounded-xl border p-3 text-sm transition ${normalizeTheme(r.theme) === m.id ? "border-brand ring-4 ring-brand/15" : "border-line"}`} style={{ background: m.bg, color: m.id === "midnight" || m.id === "ember" ? "#eee" : "#222" }}>{m.name}</button>
                 ))}
               </div>
             </Field>
@@ -70,19 +84,26 @@ export default function Settings() {
               </div>
             </Field>
             <Field label="Default language"><Select value={r.defaultLanguage} onChange={(e) => setR({ ...r, defaultLanguage: e.target.value })}>{langs.map((l) => <option key={l} value={l}>{LANGS[l]?.name}</option>)}</Select></Field>
-            <Button variant="primary" busy={busy} onClick={() => save({ name: r.name, tagline: r.tagline, primaryColor: r.primaryColor, accentColor: r.accentColor, theme: r.theme, languages: langs, defaultLanguage: r.defaultLanguage }, "Branding saved")}>Save branding</Button>
+            <Button variant="primary" busy={busy} onClick={() => save({ name: r.name, tagline: r.tagline, primaryColor: r.primaryColor, accentColor: r.accentColor, theme: r.theme, languages: langs, defaultLanguage: r.defaultLanguage }, "Branding saved").then(() => window.location.reload())}>Save branding</Button>
           </Card>
           <div>
             <p className="mb-2 text-xs uppercase tracking-wider text-neutral-500">Live preview</p>
-            <div className="overflow-hidden rounded-3xl border border-white/10 p-6" style={{ background: r.theme === "ivory" ? "#faf6ee" : r.theme === "ember" ? "#120a06" : "#0b0b0b", color: r.theme === "ivory" ? "#1f1a14" : "#f5f1ea" }}>
-              <p className="text-[10px] uppercase tracking-[0.35em] opacity-60">Welcome to</p>
-              <p className="font-display mt-2 text-4xl">{r.name}</p>
-              <p className="mt-1 text-sm italic opacity-60">{r.tagline}</p>
-              <div className="mt-6 flex gap-2">
-                <span className="rounded-full px-4 py-2 text-sm font-semibold text-black" style={{ background: `linear-gradient(135deg, ${r.primaryColor}, ${r.accentColor})` }}>Add to bag · ₹12.00</span>
-                <span className="rounded-full border px-4 py-2 text-sm" style={{ borderColor: r.primaryColor, color: r.primaryColor }}>Customise</span>
-              </div>
-            </div>
+            {(() => {
+              const th = normalizeTheme(r.theme); const c = themeColors(r.primaryColor, r.accentColor); const dark = th === "midnight" || th === "ember";
+              const bg = MENU_THEMES.find((x) => x.id === th)?.bg ?? "#faf6f1";
+              return (
+                <div className="overflow-hidden rounded-3xl border border-line p-6 transition-colors duration-500" style={{ background: bg, color: dark ? "#f5f1ea" : "#1f1416" }}>
+                  <p className="text-[10px] uppercase tracking-[0.35em] opacity-60">Welcome to</p>
+                  <p className="font-display mt-2 text-4xl">{r.name}</p>
+                  <p className="mt-1 text-sm italic opacity-60">{r.tagline}</p>
+                  <div className="mt-5 flex gap-2 text-[11px] font-medium"><span className="rounded-full px-3 py-1.5 text-white" style={{ background: c.primary }}>Burgers</span><span className="rounded-full border px-3 py-1.5 opacity-70" style={{ borderColor: c.primary }}>Sides</span><span className="rounded-full border px-3 py-1.5 opacity-70" style={{ borderColor: c.primary }}>Drinks</span></div>
+                  <div className="mt-5 flex gap-2">
+                    <span className="rounded-full px-4 py-2 text-sm font-semibold text-white shadow-lg" style={{ background: `linear-gradient(135deg, ${c.accent}, ${c.primary})` }}>Add to bag · ₹349</span>
+                    <span className="rounded-full border px-4 py-2 text-sm" style={{ borderColor: c.primary, color: c.primary }}>Customise</span>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
