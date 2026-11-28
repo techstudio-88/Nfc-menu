@@ -618,7 +618,7 @@ function CartDrawer({
     const sig = JSON.stringify([payload, applied, method, notes, tableCode]);
     if (!keyRef.current || keyRef.current.sig !== sig) keyRef.current = { sig, key: crypto.randomUUID() };
     setPlacing(true);
-    const const orderBody = { slug, items: payload, couponCode: applied, tableCode, cardToken, clientKey: keyRef.current.key, customerKey: guestCustomerKey(slug), notes, paymentMethod: method, language: lang };
+    const orderBody = { slug, items: payload, couponCode: applied, tableCode, cardToken, clientKey: keyRef.current.key, customerKey: guestCustomerKey(slug), notes, paymentMethod: method, language: lang };
     try {
       const r = await api<{ token: string }>("/api/public/orders", { body: orderBody });
       if (method === "online") {
