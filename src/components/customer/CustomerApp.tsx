@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { MenuItemFull, MenuTree } from "@/lib/orders";
-import { api } from "@/lib/client";
+import { api, flushOfflineOrderOutbox, queueOfflineOrder } from "@/lib/client";
 import { LANGS, t as dict, type Dict } from "@/lib/i18n";
 import { formatMoney, tr, trDesc } from "@/lib/pricing";
 import DishSheet, { type CartLine } from "./DishSheet";
@@ -618,8 +618,9 @@ function CartDrawer({
     const sig = JSON.stringify([payload, applied, method, notes, tableCode]);
     if (!keyRef.current || keyRef.current.sig !== sig) keyRef.current = { sig, key: crypto.randomUUID() };
     setPlacing(true);
+    const const orderBody = { slug, items: payload, couponCode: applied, tableCode, cardToken, clientKey: keyRef.current.key, customerKey: guestCustomerKey(slug), notes, paymentMethod: method, language: lang };
     try {
-      const r = await api<{ token: string }>("/api/public/orders", { body: { slug, items: payload, couponCode: applied, tableCode, cardToken, clientKey: keyRef.current.key, customerKey: guestCustomerKey(slug), notes, paymentMethod: method, language: lang } });
+      const r = await api<{ token: string }>("/api/public/orders", { body: orderBody });
       if (method === "online") {
         const c = await api<{ url: string }>(`/api/public/orders/${r.token}`, { body: { action: "checkout" } });
         window.location.href = c.url;
@@ -627,10 +628,38 @@ function CartDrawer({
       }
       onPlaced(r.token);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not place order");
+      if (method !== "online" && (!navigator.onLine || e instanceof TypeError)) {
+        try {
+          await queueOfflineOrder(orderBody);
+          setError("You are offline. Your order is saved safely and will be sent automatically when your connection returns.");
+        } catch (queueError) {
+          setError(queueError instanceof Error ? queueError.message : "Could not save your order offline.");
+        }
+      } else setError(e instanceof Error ? e.message : "Could not place order");
       setPlacing(false);
     }
   };
+
+  useEffect(() => {
+    const onOnline = () => { void flushOfflineOrderOutbox(); };
+    const onSynced = (event: Event) => {
+      const detail = (event as CustomEvent<{ clientKey: string; token: string }>).detail;
+      if (detail?.clientKey === keyRef.current?.key && detail.token) onPlaced(detail.token);
+    };
+    const onWorkerMessage = (event: MessageEvent) => {
+      const data = event.data as { type?: string; clientKey?: string; token?: string };
+      if (data.type === "TAPMENU_ORDER_SYNCED" && data.clientKey === keyRef.current?.key && data.token) onPlaced(data.token);
+    };
+    window.addEventListener("online", onOnline);
+    window.addEventListener("tapmenu:order-synced", onSynced);
+    navigator.serviceWorker?.addEventListener("message", onWorkerMessage);
+    void onOnline();
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("tapmenu:order-synced", onSynced);
+      navigator.serviceWorker?.removeEventListener("message", onWorkerMessage);
+    };
+  }, [onPlaced]);
 
   const est = cart.reduce((a, l) => a + l.unitPrice * l.qty, 0);
   const tot = quote?.totals;

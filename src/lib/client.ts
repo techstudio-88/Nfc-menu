@@ -22,6 +22,71 @@ export async function api<T = any>(url: string, opts: { method?: string; body?: 
   return data as T;
 }
 
+type PendingOfflineOrder = { clientKey: string; payload: Record<string, unknown>; createdAt: number };
+const OUTBOX_DB = "tapmenu-offline-orders";
+function openOutbox() {
+  return new Promise<IDBDatabase>((resolve, reject) => {
+    const req = indexedDB.open(OUTBOX_DB, 1);
+    req.onupgradeneeded = () => { if (!req.result.objectStoreNames.contains("orders")) req.result.createObjectStore("orders", { keyPath: "clientKey" }); };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error ?? new Error("Could not open offline order storage."));
+  });
+}
+export async function queueOfflineOrder(payload: Record<string, unknown>) {
+  const clientKey = String(payload.clientKey ?? "");
+  if (!clientKey) throw new Error("Offline order is missing its retry key.");
+  const db = await openOutbox();
+  await new Promise<void>((resolve, reject) => {
+    const tx = db.transaction("orders", "readwrite");
+    tx.objectStore("orders").put({ clientKey, payload, createdAt: Date.now() } satisfies PendingOfflineOrder);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error ?? new Error("Could not save your order offline."));
+    tx.onabort = () => reject(tx.error ?? new Error("Could not save your order offline."));
+  });
+  db.close();
+  if ("serviceWorker" in navigator) {
+    const reg = await navigator.serviceWorker.ready.catch(() => null);
+    const syncReg = reg as (ServiceWorkerRegistration & { sync?: { register: (tag: string) => Promise<void> } }) | null;
+    if (syncReg?.sync) await syncReg.sync.register("tapmenu-order-outbox").catch(() => undefined);
+    else reg?.active?.postMessage({ type: "TAPMENU_FLUSH_ORDER_OUTBOX" });
+  }
+}
+export async function flushOfflineOrderOutbox() {
+  if (!navigator.onLine || typeof indexedDB === "undefined") return [];
+  const db = await openOutbox();
+  const rows = await new Promise<PendingOfflineOrder[]>((resolve, reject) => {
+    const tx = db.transaction("orders", "readonly");
+    const req = tx.objectStore("orders").getAll();
+    req.onsuccess = () => resolve(req.result as PendingOfflineOrder[]);
+    req.onerror = () => reject(req.error ?? new Error("Could not read offline orders."));
+  });
+  db.close();
+  const synced: { clientKey: string; token: string; orderNo?: number }[] = [];
+  for (const row of rows) {
+    let response: Response;
+    try {
+      response = await fetch("/api/public/orders", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(row.payload), cache: "no-store" });
+    } catch { break; }
+    if (!response.ok && response.status >= 500) break;
+    const result = await response.json().catch(() => ({}));
+    const store = await openOutbox();
+    await new Promise<void>((resolve, reject) => {
+      const tx = store.transaction("orders", "readwrite");
+      tx.objectStore("orders").delete(row.clientKey);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error ?? new Error("Could not update offline order queue."));
+    });
+    store.close();
+    if (response.ok && result.token) {
+      synced.push({ clientKey: row.clientKey, token: result.token, orderNo: result.orderNo });
+      window.dispatchEvent(new CustomEvent("tapmenu:order-synced", { detail: { clientKey: row.clientKey, token: result.token, orderNo: result.orderNo } }));
+    } else {
+      window.dispatchEvent(new CustomEvent("tapmenu:order-failed", { detail: { clientKey: row.clientKey, message: result.error ?? "Your saved order could not be sent." } }));
+    }
+  }
+  return synced;
+}
+
 export function useNow(ms = 1000) {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -148,12 +213,10 @@ export function useRealtime(opts: { scope: "owner" | "kitchen" | "staff"; statio
             if (!ok) setBlocked(true);
           }
           if (loud && typeof Notification !== "undefined" && Notification.permission === "granted" && document.hidden) {
-            try {
-              const e = r.events[r.events.length - 1];
-              new Notification(e.title, { body: e.body, tag: "tapmenu-" + e.type });
-            } catch {
-              /* some mobile browsers only allow SW notifications */
-            }
+            const e = r.events[r.events.length - 1];
+            const options = { body: e.body, tag: "tapmenu-" + e.type, icon: "/icon.svg", data: { url: e.orderId ? "/dashboard/orders" : "/dashboard" } };
+            if ("serviceWorker" in navigator) void navigator.serviceWorker.ready.then((reg) => reg.showNotification(e.title, options)).catch(() => { try { new Notification(e.title, options); } catch { /* permission can expire */ } });
+            else { try { new Notification(e.title, options); } catch { /* permission can expire */ } }
           }
           if (document.hidden && !flash) {
             let on = false;
