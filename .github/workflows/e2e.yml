@@ -1,0 +1,30 @@
+name: TapMenu Playwright E2E
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm install
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Wait for production deployment
+        run: sleep 50
+      - name: Run end-to-end tests
+        env:
+          PLAYWRIGHT_BASE_URL: https://nfc-menu-lime.vercel.app
+        run: npm run test:e2e
