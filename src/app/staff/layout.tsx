@@ -11,7 +11,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
       brand={s.restaurant!.name}
       sub={s.role!}
       user={s.user.email}
-      restaurantSlug={s.restaurant!.slug}
+      restaurantSlug={s.restaurant!.slug} theme={{ primary: s.restaurant!.primaryColor, accent: s.restaurant!.accentColor }}
       nav={[{ href: "/staff", label: "Floor panel", icon: "🛎" }, ...(owner ? [{ href: "/dashboard", label: "Owner dashboard", icon: "◈" }] : [])]}
     >
       {children}

@@ -10,10 +10,12 @@ export default async function Layout({ children }: { children: React.ReactNode }
       brand={s.restaurant!.name}
       sub={s.role!}
       user={s.user.email}
-      restaurantSlug={s.restaurant!.slug}
+      restaurantSlug={s.restaurant!.slug} theme={{ primary: s.restaurant!.primaryColor, accent: s.restaurant!.accentColor }}
       nav={[
         { href: "/dashboard", label: "Overview", icon: "◈" },
         { href: "/dashboard/orders", label: "Live orders", icon: "🔔" },
+        { href: "/dashboard/pos", label: "Counter POS", icon: "🧾" },
+        { href: "/dashboard/channels", label: "Order channels", icon: "🛵" },
         { href: "/dashboard/menu", label: "Menu", icon: "🍕" },
         { href: "/dashboard/venues", label: "Tables & NFC", icon: "📍" },
         { href: "/dashboard/team", label: "Team & kitchen", icon: "👥" },

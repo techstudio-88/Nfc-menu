@@ -1,4 +1,5 @@
 "use client";
+import { themeColors, normalizeTheme } from "@/lib/theme";
 import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,7 +19,8 @@ type PublicMenu = {
 };
 
 const THEMES: Record<string, Record<string, string>> = {
-  noir: { "--bg": "#0b0b0b", "--fg": "#f5f1ea", "--muted": "#a39b8f", "--card": "#151413", "--line": "rgba(255,255,255,.11)" },
+  porcelain: { "--bg": "#faf6f1", "--fg": "#1f1416", "--muted": "#7a6a6c", "--card": "#ffffff", "--line": "rgba(80,20,30,.12)" },
+  midnight: { "--bg": "#0b0b0b", "--fg": "#f5f1ea", "--muted": "#a39b8f", "--card": "#151413", "--line": "rgba(255,255,255,.11)" },
   ember: { "--bg": "#120a06", "--fg": "#fbefe2", "--muted": "#b69a85", "--card": "#1d110b", "--line": "rgba(255,170,90,.2)" },
   ivory: { "--bg": "#faf6ee", "--fg": "#1f1a14", "--muted": "#7a6f61", "--card": "#fffdf8", "--line": "rgba(0,0,0,.12)" },
 };
@@ -147,16 +149,17 @@ export default function CustomerApp({ slug, table, card }: { slug: string; table
 
   const visible = useMemo(() => (cat === "__picks" ? items.filter((i) => i.featured) : items.filter((i) => i.categoryId === cat)), [items, cat]);
   const count = cart.reduce((a, l) => a + l.qty, 0);
-  const brandPrimary = data?.restaurant.primaryColor ?? "#c93449";
+  const brandColors = themeColors(data?.restaurant.primaryColor, data?.restaurant.accentColor);
+  const brandPrimary = brandColors.primary;
   const style = useMemo(
     () =>
       ({
-        ...(THEMES[data?.restaurant.theme ?? "noir"] ?? THEMES.noir),
+        ...(THEMES[normalizeTheme(data?.restaurant.theme)] ?? THEMES.porcelain),
         "--brand": brandPrimary,
-        "--accent": data?.restaurant.accentColor ?? "#851b32",
+        "--accent": brandColors.accent,
         "--on-brand": lum(brandPrimary) > 0.6 ? "#16110b" : "#ffffff",
       }) as React.CSSProperties,
-    [data, brandPrimary],
+    [data, brandPrimary, brandColors.accent],
   );
 
   const addLine = (l: CartLine) => {

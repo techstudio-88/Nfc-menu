@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { api, clock, minutesSince, useNow, useRealtime } from "@/lib/client";
 import type { OrderView } from "@/lib/orders";
@@ -57,9 +56,9 @@ export default function Kitchen() {
     return s === "placed" ? 0 : s === "accepted" || s === "preparing" ? 1 : 2;
   };
   const cols = [
-    { title: "New", tone: "border-amber-400/40", cards: cards.filter((c) => colOf(c) === 0) },
-    { title: "In progress", tone: "border-violet-400/40", cards: cards.filter((c) => colOf(c) === 1) },
-    { title: "Ready", tone: "border-emerald-400/40", cards: cards.filter((c) => colOf(c) === 2) },
+    { title: "New", tone: "border-t-signal", dot: "bg-signal", cards: cards.filter((c) => colOf(c) === 0) },
+    { title: "In progress", tone: "border-t-warn", dot: "bg-warn", cards: cards.filter((c) => colOf(c) === 1) },
+    { title: "Ready", tone: "border-t-ok", dot: "bg-ok", cards: cards.filter((c) => colOf(c) === 2) },
   ];
 
   const act = async (orderId: string, body: Record<string, unknown>) => {
@@ -74,40 +73,38 @@ export default function Kitchen() {
   if (o.loading && !o.data) return <Loading label="Opening kitchen…" />;
 
   return (
-    <div className="min-h-dvh bg-[#080808] p-3 sm:p-5">
+    <div>
       <header className="mb-4 flex flex-wrap items-center gap-3">
         <div>
-          <p className="font-display text-3xl text-white">Kitchen <span className="gold-text">display</span></p>
-          <p className="text-xs text-neutral-500">{o.data?.restaurantName}</p>
+          <p className="font-display text-3xl text-ink">Kitchen <span className="gold-text">display</span></p>
+          <p className="text-xs text-mute">{o.data?.restaurantName}</p>
         </div>
         <div className="no-scrollbar flex flex-1 gap-1.5 overflow-x-auto">
           {[{ id: "all", name: "All stations" }, ...(o.data?.stations ?? [])].map((s) => (
-            <button key={s.id} onClick={() => setStation(s.id)} aria-pressed={station === s.id} className={cx("shrink-0 rounded-full border px-5 py-2.5 text-base font-medium", station === s.id ? "border-amber-400 bg-amber-500/20 text-amber-200" : "border-white/10 text-neutral-400")}>
+            <button key={s.id} onClick={() => setStation(s.id)} aria-pressed={station === s.id} className={cx("shrink-0 rounded-full border px-5 py-2.5 text-base font-medium", station === s.id ? "border-brand bg-brand text-[#ffffff]" : "border-line bg-surface text-mute hover:border-brand/40")}>
               {s.name}
             </button>
           ))}
         </div>
-        <span className={cx("rounded-full px-3 py-1 text-xs", rt.connected ? "bg-emerald-500/15 text-emerald-300" : "bg-red-500/20 text-red-300")}>{rt.connected ? "● live" : "● reconnecting"}</span>
+        <span className={cx("rounded-full px-3 py-1 text-xs", rt.connected ? "bg-ok-soft text-ok" : "bg-signal-soft text-signal")}>{rt.connected ? "● live" : "● reconnecting"}</span>
         <Button size="sm" onClick={() => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.())}>⛶</Button>
-        {["owner", "manager"].includes(o.data?.role ?? "") && <Link href="/dashboard"><Button size="sm">Dashboard</Button></Link>}
-        <Button size="sm" variant="ghost" onClick={async () => { await api("/api/auth/logout", { body: {} }); location.href = "/login"; }}>Sign out</Button>
       </header>
       <AlertBar rt={rt} />
       {cards.length === 0 ? (
         <div className="grid h-[60vh] place-items-center text-center">
           <div>
-            <p className="text-6xl">🍳</p>
-            <p className="font-display mt-4 text-3xl text-white">All caught up</p>
-            <p className="mt-1 text-neutral-500">New orders pop up here instantly with a sound alert.</p>
+            <p className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-brand-soft text-4xl text-brand">✓</p>
+            <p className="font-display mt-4 text-3xl text-ink">All caught up</p>
+            <p className="mt-1 text-mute">New orders pop up here instantly with a sound alert.</p>
           </div>
         </div>
       ) : (
         <div className="grid gap-4 lg:grid-cols-3">
           {cols.map((col) => (
             <section key={col.title} aria-label={col.title}>
-              <h2 className="mb-3 flex items-center justify-between px-1 text-sm font-semibold uppercase tracking-[0.2em] text-neutral-400">
-                {col.title}
-                <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs text-white">{col.cards.length}</span>
+              <h2 className="mb-3 flex items-center justify-between px-1 text-sm font-semibold uppercase tracking-[0.2em] text-mute">
+                <span className="flex items-center gap-2"><span className={cx("h-2 w-2 rounded-full", col.dot)} />{col.title}</span>
+                <span className="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs text-brand-deep">{col.cards.length}</span>
               </h2>
               <div className="space-y-3">
                 {col.cards.map(({ order, items, st }) => (
@@ -125,47 +122,47 @@ export default function Kitchen() {
 function KCard({ order, items, stStatus, stationId, now, border, fresh, act }: { order: OrderView; items: OrderView["items"]; stStatus?: string; stationId: string | null; now: number; border: string; fresh: boolean; act: (id: string, b: Record<string, unknown>) => void; }) {
   const [voice, setVoice] = useState(false);
   const mins = minutesSince(order.createdAt, now);
-  const late = mins >= 20 ? "text-red-400" : mins >= 10 ? "text-amber-300" : "text-emerald-300";
+  const late = mins >= 20 ? "animate-pulse text-signal" : mins >= 10 ? "text-warn" : "text-ok";
   const status = stStatus ?? order.status;
   const next: { label: string; run: () => void; cls: string } | null =
     status === "placed"
-      ? { label: "Accept order", cls: "bg-amber-400 text-black", run: () => (stationId ? act(order.id, { action: "station", stationId, to: "accepted" }) : act(order.id, { action: "status", to: "accepted" })) }
+      ? { label: "Accept order", cls: "bg-signal text-[#ffffff]", run: () => (stationId ? act(order.id, { action: "station", stationId, to: "accepted" }) : act(order.id, { action: "status", to: "accepted" })) }
       : status === "accepted"
-        ? { label: "Start preparation", cls: "bg-violet-400 text-black", run: () => (stationId ? act(order.id, { action: "station", stationId, to: "preparing" }) : act(order.id, { action: "status", to: "preparing" })) }
+        ? { label: "Start preparation", cls: "bg-warn text-[#ffffff]", run: () => (stationId ? act(order.id, { action: "station", stationId, to: "preparing" }) : act(order.id, { action: "status", to: "preparing" })) }
         : status === "preparing"
-          ? { label: "Mark ready", cls: "bg-emerald-400 text-black", run: () => (stationId ? act(order.id, { action: "station", stationId, to: "ready" }) : act(order.id, { action: "status", to: "ready" })) }
+          ? { label: "Mark ready", cls: "bg-ok text-[#ffffff]", run: () => (stationId ? act(order.id, { action: "station", stationId, to: "ready" }) : act(order.id, { action: "status", to: "ready" })) }
           : status === "ready" || status === "completed"
             ? order.status === "ready"
-              ? { label: "Complete", cls: "bg-white/15 text-white", run: () => act(order.id, { action: "status", to: "completed" }) }
+              ? { label: "Complete", cls: "bg-ink text-[#ffffff]", run: () => act(order.id, { action: "status", to: "completed" }) }
               : null
             : null;
   return (
-    <article className={cx("rounded-2xl border-2 bg-neutral-900 p-4 transition", border, fresh && "animate-pulse ring-2 ring-amber-300")}>
+    <article className={cx("tm-card rounded-2xl border border-t-4 p-4", border, fresh && "animate-pulse ring-2 ring-signal")}>
       <header className="flex items-center gap-3">
-        <span className="font-display text-4xl text-white">#{order.orderNo}</span>
-        <span className="rounded-lg bg-amber-500/20 px-3 py-1 text-xl font-bold text-amber-300">T {order.tableCode}</span>
-        {order.priority && <span className="rounded-md bg-red-500 px-2 py-0.5 text-xs font-bold uppercase text-white">Priority</span>}
+        <span className="font-display text-4xl text-ink">#{order.orderNo}</span>
+        <span className="rounded-lg bg-brand-soft px-3 py-1 text-xl font-bold text-brand-deep">T {order.tableCode}</span>
+        {order.priority && <span className="rounded-md bg-signal px-2 py-0.5 text-xs font-bold uppercase text-[#ffffff]">Priority</span>}
         <span className={cx("ml-auto font-mono text-2xl font-semibold tabular-nums", late)} aria-label={`${mins} minutes`}>{clock(order.createdAt, now)}</span>
       </header>
       <ul className="mt-3 space-y-3">
         {items.map((it) => (
-          <li key={it.id} className="border-t border-white/10 pt-3">
-            <p className="text-xl font-semibold text-white">
-              <span className="mr-2 inline-block min-w-10 rounded-lg bg-white/10 px-2 py-0.5 text-center text-amber-300">{it.quantity}×</span>
+          <li key={it.id} className="border-t border-line pt-3">
+            <p className="text-xl font-semibold text-ink">
+              <span className="mr-2 inline-block min-w-10 rounded-lg bg-porcelain px-2 py-0.5 text-center text-brand">{it.quantity}×</span>
               {it.name}
-              {it.variantName && <span className="ml-2 rounded bg-amber-500/20 px-2 py-0.5 text-base text-amber-200">{it.variantName}</span>}
+              {it.variantName && <span className="ml-2 rounded bg-brand-soft px-2 py-0.5 text-base text-brand-deep">{it.variantName}</span>}
             </p>
             <Customizations it={it} big />
-            {it.instructions && <p className="mt-2 rounded-lg bg-amber-400/15 px-3 py-1.5 text-base font-medium text-amber-200">⚠ {it.instructions}</p>}
-            {!stationId && <p className="mt-1 text-xs text-neutral-500">{it.stationName}</p>}
+            {it.instructions && <p className="mt-2 rounded-lg bg-signal-soft px-3 py-1.5 text-base font-medium text-signal-deep">⚠ {it.instructions}</p>}
+            {!stationId && <p className="mt-1 text-xs text-mute">{it.stationName}</p>}
           </li>
         ))}
       </ul>
-      {order.notes && <p className="mt-3 rounded-lg bg-amber-400/15 px-3 py-2 text-base text-amber-100">Note: {order.notes}</p>}
+      {order.notes && <p className="mt-3 rounded-lg bg-signal-soft px-3 py-2 text-base text-signal-deep">Note: {order.notes}</p>}
       {order.stations.length > 1 && (
         <div className="mt-3 flex flex-wrap gap-1.5 text-xs">
           {order.stations.map((s) => (
-            <span key={s.stationId} className={cx("rounded-full px-2.5 py-1", s.status === "ready" || s.status === "completed" ? "bg-emerald-500/20 text-emerald-300" : s.status === "preparing" ? "bg-violet-500/20 text-violet-300" : "bg-white/10 text-neutral-300")}>
+            <span key={s.stationId} className={cx("rounded-full px-2.5 py-1", s.status === "ready" || s.status === "completed" ? "bg-ok text-[#ffffff]" : s.status === "preparing" ? "bg-warn-soft text-warn" : "bg-porcelain text-mute")}>
               {s.stationName}: {s.status === "completed" ? "ready" : s.status}
             </span>
           ))}
@@ -177,8 +174,8 @@ function KCard({ order, items, stStatus, stationId, now, border, fresh, act }: {
             {next.label}
           </button>
         )}
-        <button onClick={() => act(order.id, { action: "priority", value: !order.priority })} aria-pressed={order.priority} aria-label="Toggle priority" className={cx("rounded-xl border px-4 text-lg", order.priority ? "border-red-400 bg-red-500/20" : "border-white/10")}>⚑</button>
-        <button onClick={() => setVoice((v) => !v)} aria-label="Voice tools" className="rounded-xl border border-white/10 px-4 text-lg">🔊</button>
+        <button onClick={() => act(order.id, { action: "priority", value: !order.priority })} aria-pressed={order.priority} aria-label="Toggle priority" className={cx("rounded-xl border px-4 text-lg", order.priority ? "border-signal bg-signal-soft text-signal" : "border-line text-mute")}>⚑</button>
+        <button onClick={() => setVoice((v) => !v)} aria-label="Voice tools" className="rounded-xl border border-line px-4 text-lg text-mute">🔊</button>
       </footer>
       {voice && <VoicePanel order={order} />}
     </article>

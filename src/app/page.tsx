@@ -5,139 +5,246 @@ import LandingMotion from "@/components/landing/LandingMotion";
 function LineIcon({ name, className = "" }: { name: string; className?: string }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   const paths: Record<string, ReactNode> = {
-    spark: <><path d="M12 2.8 14.4 9.6 21.2 12l-6.8 2.4L12 21.2l-2.4-6.8L2.8 12l6.8-2.4L12 2.8Z"/><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z"/></>,
-    leaf: <><path d="M20.5 3.5C11 3.5 5 6.6 5 13a6 6 0 0 0 6 6c6.4 0 9.5-6 9.5-15.5Z"/><path d="M4 21c3.2-5 7.2-8.7 12-11"/></>,
-    plate: <><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.2"/><path d="M3 4v5M1.5 6.5h3M21 4v7M19.5 11h3"/></>,
-    layers: <><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></>,
-    sliders: <><path d="M4 7h9m4 0h3M4 17h3m4 0h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></>,
-    nfc: <><path d="M5 8a6 6 0 0 1 0 8M8 5a10 10 0 0 1 0 14M11 2a14 14 0 0 1 0 20"/><rect x="14" y="7" width="7" height="10" rx="1.5"/></>,
-    bolt: <><path d="m13 2-9 12h7l-1 8 10-13h-7l1-7Z"/></>,
-    chef: <><path d="M6 11a4 4 0 1 1 7.5-2A4.5 4.5 0 1 1 19 14v5H6v-8Z"/><path d="M9 19v2h9v-2"/></>
+    spark: <><path d="M12 2.8 14.4 9.6 21.2 12l-6.8 2.4L12 21.2l-2.4-6.8L2.8 12l6.8-2.4L12 2.8Z" /><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z" /></>,
+    plate: <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="5.2" /><path d="M3 4v5M1.5 6.5h3M21 4v7M19.5 11h3" /></>,
+    sliders: <><path d="M4 7h9m4 0h3M4 17h3m4 0h9" /><circle cx="15" cy="7" r="2" /><circle cx="9" cy="17" r="2" /></>,
+    nfc: <><path d="M5 8a6 6 0 0 1 0 8M8 5a10 10 0 0 1 0 14M11 2a14 14 0 0 1 0 20" /><rect x="14" y="7" width="7" height="10" rx="1.5" /></>,
+    bolt: <path d="m13 2-9 12h7l-1 8 10-13h-7l1-7Z" />,
+    chef: <><path d="M6 11a4 4 0 1 1 7.5-2A4.5 4.5 0 1 1 19 14v5H6v-8Z" /><path d="M9 19v2h9v-2" /></>,
+    cube: <><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" /><path d="m4 7.5 8 4.5 8-4.5M12 12v9" /></>,
+    check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
   };
   return <svg viewBox="0 0 24 24" aria-hidden="true" className={className} {...common}>{paths[name] ?? paths.spark}</svg>;
 }
 
-export const dynamic = "force-dynamic";
-
-const highlights = [
-  { icon: "leaf", title: "FRESH & READY", body: "Fresh ingredients, beautifully presented and easy to explore." },
-  { icon: "spark", title: "MADE TO STAND OUT", body: "Every dish deserves its own moment in the spotlight." },
-  { icon: "plate", title: "EASY FOR EVERY GUEST", body: "A seamless experience from the first tap to the final bite." },
-];
 const features = [
-  ["01", "Menus guests love", "Show every dish with great photos and 3D previews. Help guests choose with confidence."],
-  ["02", "Every order, just right", "Guests can pick sizes, toppings and extras. The price updates as they choose."],
-  ["03", "One tap is all it takes", "Guests tap your NFC card and your menu opens. No app to install and no signup needed."],
-  ["04", "Orders reach your kitchen", "Send each order to the right kitchen screen. Your team can track it from start to finish."],
-];
-const steps = [
-  ["01", "Tap", "A guest taps the NFC card placed on their table."],
-  ["02", "Discover", "Your digital menu opens instantly in their browser."],
-  ["03", "Customise", "They explore dishes, choose options and build their order."],
-  ["04", "Enjoy", "The order reaches your team and service keeps moving."],
-];
+  ["01", "Menus guests love", "Every dish with great photos and a 3D preview, so guests choose with confidence.", "cube"],
+  ["02", "Every order, just right", "Sizes, toppings and extras. The price updates live as guests choose.", "sliders"],
+  ["03", "One tap is all it takes", "Guests tap your NFC card and the menu opens. No app, no signup.", "nfc"],
+  ["04", "Orders reach your kitchen", "Each order lands on the right kitchen screen and is tracked start to finish.", "bolt"],
+] as const;
 const roles = [
   ["GUEST EXPERIENCE", "A menu guests remember", "Beautiful menus, interactive dishes, clear prices and effortless ordering."],
   ["OWNER STUDIO", "Your restaurant, your rules", "Manage dishes, modifiers, prices, tables, NFC cards, staff and offers."],
-  ["KITCHEN DISPLAY", "Every ticket in the right place", "Organise incoming orders by station with clear modifiers and live status."],
-  ["TEAM OPERATIONS", "A floor that stays in sync", "Help staff track orders, table requests and service progress."],
+  ["KITCHEN DISPLAY", "Every ticket in the right place", "Orders by station with clear modifiers, timers and live status."],
+  ["COUNTER POS", "Take orders at the counter", "Dine-in, takeaway and delivery from one fast point-of-sale screen."],
+  ["ORDER CHANNELS", "Every app in one feed", "Swiggy, Zomato and ONDC orders — through a partner — land beside dine-in on the same kitchen screen."],
+  ["OWNER INSIGHTS", "Know what sells", "Live sales, best dishes and channel revenue on one animated dashboard."],
+  ["TEAM OPERATIONS", "A floor that stays in sync", "Staff see table requests, order progress and service status in real time."],
 ];
+const steps = [
+  ["01", "Tap", "A guest taps the NFC card on their table.", "nfc"],
+  ["02", "Discover", "Your digital menu opens instantly in their browser.", "spark"],
+  ["03", "Customise", "They explore dishes and build their order.", "sliders"],
+  ["04", "Enjoy", "The order reaches your team and service keeps moving.", "chef"],
+] as const;
+const marquee = ["COUNTER POS", "DELIVERY-APP ORDER FEED", "BRAND COLOURS", "NFC TAP", "QR FALLBACK", "3D DISH PREVIEWS", "LIVE KITCHEN DISPLAY", "MULTI-LANGUAGE MENUS", "MODIFIERS & EXTRAS", "COUPONS", "TABLE REQUESTS", "SALES ANALYTICS", "ORDER TRACKING"];
+// Edit these to match your real offer — prices are intentionally left as a quote until you set them.
+const plans = [
+  { name: "Starter", tag: "One venue", price: "Custom quote", featured: false, points: ["Digital menu with photos & 3D previews", "NFC cards + printable QR fallback", "Live kitchen display", "Guest order tracking", "Counter POS"] },
+  { name: "Growth", tag: "Busy kitchens", price: "Custom quote", featured: true, points: ["Everything in Starter", "Multiple kitchen stations", "Modifiers, coupons & service charge", "Kitchen & floor staff roles", "Sales analytics", "Delivery-app order feed", "Your own brand colours"] },
+  { name: "Group", tag: "Multiple branches", price: "Custom quote", featured: false, points: ["Everything in Growth", "Multiple branches & tables", "Multi-language menus", "Owner overview across venues"] },
+];
+
+function Plate() {
+  return (
+    <svg viewBox="0 0 120 120" className="h-full w-full" aria-hidden="true">
+      <defs>
+        <radialGradient id="plate" cx="50%" cy="40%"><stop offset="0" stopColor="#ffffff" /><stop offset="1" stopColor="#e3ece7" /></radialGradient>
+        <radialGradient id="crust" cx="50%" cy="40%"><stop offset="0" stopColor="#f8edd6" /><stop offset="1" stopColor="#ecd6ac" /></radialGradient>
+      </defs>
+      <circle cx="60" cy="62" r="52" fill="#04251d" opacity=".12" />
+      <circle cx="60" cy="58" r="52" fill="url(#plate)" stroke="#d3e0d9" />
+      <circle cx="60" cy="58" r="40" fill="url(#crust)" />
+      <circle cx="60" cy="58" r="34" fill="#f3dfb7" opacity=".6" />
+      {[[48, 46], [70, 50], [58, 68], [76, 70], [44, 66], [62, 40]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="6.2" fill="#b3283a" />)}
+      {[[54, 54, 20], [68, 60, -30], [50, 74, 60], [72, 44, 10]].map(([x, y, r], i) => <ellipse key={i} cx={x} cy={y} rx="5.5" ry="2.6" fill="#087653" transform={`rotate(${r} ${x} ${y})`} />)}
+    </svg>
+  );
+}
+
+function PhoneMock() {
+  return (
+    <div className="relative mx-auto w-full max-w-[420px]">
+      <div className="pointer-events-none absolute inset-0 -z-0 grid place-items-center" aria-hidden="true"><span className="lp-ring" /><span className="lp-ring" /><span className="lp-ring" /></div>
+      <div className="relative z-10 mx-auto w-[min(76%,290px)] animate-float">
+        <div className="lp-phone">
+          <div className="lp-screen">
+            <div className="mx-auto mt-2 h-4 w-20 rounded-full bg-[#1c070b]" />
+            <div className="px-4 pb-5 pt-3">
+              <div className="flex items-center justify-between">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-brand font-display text-base text-[#ffffff]">E</span>
+                <span className="rounded-full border border-line bg-surface px-2.5 py-1 text-[9px] font-semibold tracking-wider text-brand-deep">TABLE T04</span>
+              </div>
+              <p className="mt-3 text-[8px] tracking-[.3em] text-mute">WELCOME TO</p>
+              <p className="font-display text-2xl leading-none text-ink">Ember &amp; Crust</p>
+              <div className="mt-3 flex gap-1.5 text-[9px] font-medium">
+                <span className="rounded-full bg-brand px-2.5 py-1 text-[#ffffff]">Pizza</span><span className="rounded-full border border-line bg-surface px-2.5 py-1 text-mute">Pasta</span><span className="rounded-full border border-line bg-surface px-2.5 py-1 text-mute">Drinks</span>
+              </div>
+              <div className="mt-3 overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_14px_30px_-20px_rgba(6,75,55,.5)]">
+                <div className="relative aspect-[5/4] bg-[radial-gradient(ellipse_at_50%_40%,rgba(11,140,100,.18),transparent_70%)]">
+                  <div className="absolute inset-3"><Plate /></div>
+                  <span className="absolute left-2 top-2 rounded-full bg-brand px-2 py-0.5 text-[8px] font-semibold tracking-wider text-[#ffffff]">3D · AR</span>
+                </div>
+                <div className="flex items-center justify-between px-3 py-2.5">
+                  <div><p className="font-display text-base leading-none text-ink">Margherita</p><p className="mt-1 text-[8px] text-mute">Basil · tomato · mozzarella</p></div>
+                  <span className="rounded-full bg-brand-deep px-2.5 py-1 text-[10px] font-semibold text-[#ffffff]">₹349</span>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between rounded-full bg-brand px-4 py-2.5 text-[10px] font-semibold text-[#ffffff]"><span>Your bag · 2</span><span>₹698</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="lp-chip absolute left-0 top-[14%] z-20 flex items-center gap-2 rounded-2xl px-3 py-2 text-[10px] tracking-wider text-white sm:-left-4" style={{ animation: "float 7s ease-in-out infinite" }}><LineIcon name="nfc" className="h-4 w-4 text-[#ef9aa4]" /><span>TAP TO OPEN</span></div>
+      <div className="lp-chip absolute right-0 top-[40%] z-20 flex items-center gap-2 rounded-2xl px-3 py-2 text-[10px] tracking-wider text-white sm:-right-4" style={{ animation: "float 8s ease-in-out -2s infinite" }}><LineIcon name="cube" className="h-4 w-4 text-[#ef9aa4]" /><span>ROTATE IN 3D</span></div>
+      <div className="lp-chip absolute bottom-[8%] left-1 z-20 flex items-center gap-2.5 rounded-2xl px-3 py-2 text-[10px] tracking-wider text-white sm:-left-6" style={{ animation: "float 9s ease-in-out -4s infinite" }}><span className="h-2 w-2 animate-pulse rounded-full bg-[#e0566a] shadow-[0_0_10px_#e0566a]" /><span>ORDER #128 → KITCHEN</span></div>
+    </div>
+  );
+}
 
 export default function Home() {
   const demo = process.env.TAPMENU_SEED_DEMO !== "false";
+  const menuHref = demo ? "/r/ember-crust?table=T04" : "/signup";
   return (
-    <main className="senso-page relative overflow-hidden text-[#eee8dc]">
-      <div className="senso-backdrop" aria-hidden="true" />
-      <div className="senso-vignette" aria-hidden="true" />
+    <main className="relative overflow-x-clip bg-porcelain text-ink">
       <LandingMotion />
-      <header className="senso-nav fixed inset-x-0 top-0 z-50 border-b border-white/[.08]">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:px-12">
-          <Link href="/" className="senso-wordmark text-xl tracking-[.28em] sm:text-2xl">TAPMENU</Link>
-          <nav className="hidden items-center gap-7 text-[9px] font-medium tracking-[.14em] text-white/65 lg:flex">
-            <a href="#home" className="hover:text-[#e45b65]">HOME</a><a href="#experience" className="hover:text-[#e45b65]">EXPERIENCE</a><a href="#platform" className="hover:text-[#e45b65]">PLATFORM</a><a href="#how" className="hover:text-[#e45b65]">HOW IT WORKS</a><a href="#demo" className="hover:text-[#e45b65]">DEMO</a><a href="#pricing" className="hover:text-[#e45b65]">PRICING</a>
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-surface/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-[1360px] items-center justify-between gap-4 px-5 py-3.5 sm:px-8 lg:px-12">
+          <Link href="/" className="senso-wordmark text-xl sm:text-2xl">TAPMENU</Link>
+          <nav className="hidden items-center gap-8 text-[11px] font-medium tracking-[.12em] text-mute lg:flex" aria-label="Sections">
+            {[["#experience", "EXPERIENCE"], ["#platform", "PLATFORM"], ["#how", "HOW IT WORKS"], ["#demo", "DEMO"], ["#pricing", "PRICING"]].map(([h, l]) => <a key={h} href={h} className="transition hover:text-brand">{l}</a>)}
           </nav>
           <div className="flex items-center gap-2 sm:gap-4">
-            <Link href="/login" className="px-2 py-2 text-[10px] tracking-[.12em] text-white/75 transition hover:text-white sm:text-xs">LOG IN</Link>
-            <Link href="/signup" className="senso-red-button px-4 py-3 text-[9px] font-semibold tracking-[.08em] sm:px-6">GET STARTED</Link>
+            <Link href="/login" className="px-2 py-2 text-[11px] font-medium tracking-[.1em] text-mute transition hover:text-ink">LOG IN</Link>
+            <Link href="/signup" className="lp-shine rounded-full bg-brand px-5 py-2.5 text-[11px] font-semibold tracking-[.08em] text-[#ffffff] shadow-[0_10px_24px_-10px_rgba(8,118,83,.7)] transition hover:bg-brand-deep">REQUEST ACCESS</Link>
           </div>
         </div>
       </header>
 
-      <div className="relative z-10">
-        <section id="home" className="mx-auto flex min-h-[100svh] max-w-[1600px] items-center px-3 pb-8 pt-24 sm:px-7 sm:pt-28 lg:px-12">
-          <div className="senso-frame relative mx-auto flex min-h-[min(82vh,850px)] w-full max-w-[1440px] flex-col overflow-hidden">
-            <div className="senso-hero relative flex flex-1 items-center overflow-hidden px-6 pb-12 pt-12 sm:px-10 lg:px-16 lg:py-16">
-              <div className="senso-dish-photo" role="img" aria-label="Fine dining dish served on a ceramic plate" />
-              <div className="senso-photo-shade" />
-              <div className="senso-hero-proof absolute bottom-8 right-8 z-10 hidden items-center gap-3 rounded-2xl border border-rose-300/20 bg-[#13090d]/80 px-4 py-3 shadow-[0_16px_50px_rgba(0,0,0,.35)] backdrop-blur-xl xl:flex"><span className="grid h-9 w-9 place-items-center rounded-xl bg-rose-500/15 text-lg text-rose-200">✦</span><span><span className="block text-[9px] font-semibold tracking-[.16em] text-rose-100">BUILT FOR MODERN DINING</span><span className="mt-1 block text-[10px] text-white/45">NFC · 3D · LIVE ORDERING</span></span><span className="ml-3 h-2 w-2 rounded-full bg-rose-300 shadow-[0_0_14px_#fb7185]"></span></div>
-              <div className="senso-hero-copy relative z-10 max-w-[590px] py-10 lg:py-14">
-                <p className="mb-5 text-[9px] font-semibold tracking-[.18em] text-[#e56a70] sm:text-[10px]">A BETTER WAY TO ORDER</p>
-                <h1 className="senso-heading text-[3.4rem] leading-[.99] tracking-[-.045em] sm:text-6xl lg:text-[clamp(4.8rem,6.3vw,6.7rem)]">Your menu.<br /><em>Made magical.</em></h1>
-                <p className="mt-7 max-w-[360px] text-[12px] leading-[1.95] text-[#c8c2b9]/75 sm:text-[13px]">Give every table a smart digital menu. Guests tap, explore dishes, choose what they love and place an order in seconds.</p>
-                <div className="mt-8 flex flex-wrap items-center gap-5">
-                  <Link href={demo ? "/r/ember-crust?table=T04" : "/signup"} className="senso-red-button px-6 py-4 text-[9px] font-semibold tracking-[.1em]">VIEW THE MENU</Link>
-                  <Link href="/demo" className="inline-flex items-center gap-2 border border-white/25 bg-black/25 px-6 py-4 text-[9px] font-semibold tracking-[.1em] text-white/85 backdrop-blur transition hover:border-[#e45b65] hover:bg-[#8f2338]/25 hover:text-white"> <span aria-hidden="true">▶</span> TRY THE DEMO</Link>
-                  <Link href="/signup" className="group inline-flex items-center gap-3 text-[9px] font-semibold tracking-[.1em] text-white/85">START NOW <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/70 text-[9px] transition group-hover:border-[#d84b56] group-hover:bg-[#d84b56]">↗</span></Link>
-                </div>
-                <div className="mt-8 flex flex-wrap gap-5 text-[9px] tracking-[.15em] text-white/35"><span>NFC ENABLED</span><span>·</span><span>INTERACTIVE 3D</span><span>·</span><span>LIVE ORDERS</span></div>
-              </div>
+      <section id="home" className="lp-hero tm-dark">
+        <div className="lp-orb -left-24 top-20 h-80 w-80 bg-brand-bright/40" aria-hidden="true" />
+        <div className="lp-orb -right-24 bottom-0 h-96 w-96 bg-[#8f1d2c]/30" aria-hidden="true" style={{ animationDirection: "alternate-reverse" }} />
+        <div className="mx-auto grid min-h-[100svh] max-w-[1360px] items-center gap-10 px-5 pb-16 pt-28 sm:px-8 lg:grid-cols-[1.05fr_.95fr] lg:gap-6 lg:px-12">
+          <div className="lp-hero-in max-w-[640px]">
+            <p className="inline-flex items-center gap-3 text-[11px] font-semibold tracking-[.22em] text-[#f3b4bb]"><span className="h-px w-8 bg-[#f3b4bb]" />A BETTER WAY TO ORDER</p>
+            <h1 className="mt-6 font-display text-[3.4rem] leading-[.98] tracking-[-.03em] text-white sm:text-7xl lg:text-[clamp(4.4rem,6vw,6.4rem)]">
+              Your menu.<br />
+              <span className="relative inline-block italic text-[#fff1f2]">Made magical.
+                <svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true" className="absolute -bottom-2 left-0 h-3 w-full"><path d="M3 9c60-8 130-8 190-3 40 3 70 3 104-2" fill="none" stroke="#c93a4d" strokeWidth="3.5" strokeLinecap="round" /></svg>
+              </span>
+            </h1>
+            <p className="mt-8 max-w-[470px] text-[15px] leading-8 text-[#f0d5d8]">Give every table a smart digital menu. Guests tap, explore dishes, choose what they love and order in seconds — and your kitchen sees it instantly.</p>
+            <div className="mt-9 flex flex-wrap items-center gap-4">
+              <Link href="/demo" className="lp-shine inline-flex min-h-[52px] items-center gap-2 rounded-full bg-gradient-to-b from-[#c93a4d] to-[#8f1d2c] px-7 text-[12px] font-semibold tracking-[.1em] text-white shadow-[0_16px_36px_-12px_rgba(179,40,58,.75)] transition hover:-translate-y-0.5">▶ TRY THE LIVE DEMO</Link>
+              <Link href={menuHref} className="inline-flex min-h-[52px] items-center rounded-full border border-white/30 px-7 text-[12px] font-semibold tracking-[.1em] text-white transition hover:border-white hover:bg-white/10">VIEW SAMPLE MENU</Link>
             </div>
-            <section className="senso-highlights grid grid-cols-1 border-t border-white/[.12] sm:grid-cols-3">
-              {highlights.map((item, i) => <div key={item.title} data-reveal className={`flex items-center gap-5 px-7 py-6 sm:px-8 lg:px-10 ${i ? "border-t border-white/[.10] sm:border-l sm:border-t-0" : ""}`}>
-                <span className="senso-line-icon flex h-10 w-10 shrink-0 items-center justify-center text-[#e35a69]"><LineIcon name={item.icon} className="h-[19px] w-[19px]" /></span>
-                <div><p className="text-[9px] font-semibold tracking-[.13em] text-[#e4c9c5]">{item.title}</p><p className="mt-2 max-w-[220px] text-[10px] leading-[1.7] text-white/45">{item.body}</p></div>
-              </div>)}
-            </section>
+            <div className="mt-9 flex flex-wrap gap-x-5 gap-y-2 text-[10px] tracking-[.16em] text-[#c99aa2]"><span>NFC ENABLED</span><span>·</span><span>INTERACTIVE 3D</span><span>·</span><span>LIVE ORDERS</span></div>
           </div>
-        </section>
+          <PhoneMock />
+        </div>
+      </section>
 
-        <section id="experience" data-reveal className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32">
-          <p className="text-[10px] tracking-[.25em] text-[#e56a70]">01 — THE GUEST EXPERIENCE</p>
-          <div className="mt-5 grid gap-7 md:grid-cols-[1.1fr_.9fr] md:items-end"><h2 className="senso-heading text-5xl leading-[1.02] sm:text-7xl">A menu made<br /><em>for everyone.</em></h2><p className="max-w-lg text-sm leading-7 text-white/50">Paper menus show a list. TapMenu creates a moment. Give every guest the freedom to discover dishes, understand every option and order at their own pace.</p></div>
-          <div className="mt-14 grid gap-4 sm:grid-cols-2">{features.map(([n,t,d])=><article key={n} data-reveal className="senso-section-card group min-h-[220px] p-7 sm:p-9"><div className="flex items-center justify-between"><span className="senso-heading text-4xl text-white/20">{n}</span><span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d94b5d]/25 bg-[#a72b40]/10 text-[#ed7884] transition group-hover:rotate-45 group-hover:shadow-[0_0_24px_rgba(215,63,85,.22)]"><LineIcon name={n === "01" ? "spark" : n === "02" ? "sliders" : n === "03" ? "nfc" : "bolt"} className="h-5 w-5" /></span></div><h3 className="senso-heading mt-9 text-3xl">{t}</h3><p className="mt-3 max-w-lg text-xs leading-6 text-white/48">{d}</p></article>)}</div>
-        </section>
-
-        <section id="platform" data-reveal className="border-y border-white/[.09] bg-[#12090a]/90 px-5 py-24 sm:px-8 sm:py-32">
-          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.85fr_1.15fr]">
-            <div><p className="text-[10px] tracking-[.25em] text-[#e56a70]">02 — ONE CONNECTED PLATFORM</p><h2 className="senso-heading mt-5 text-5xl leading-[1.03] sm:text-7xl">Simple for guests.<br /><em>Powerful for your team.</em></h2><p className="mt-6 max-w-md text-sm leading-7 text-white/50">Guests get an easy menu. Your team can manage dishes, prices, tables and orders from one place.</p><Link href="/signup" className="senso-red-button mt-8 px-6 py-4 text-[9px] tracking-[.1em]">SET UP YOUR RESTAURANT</Link></div>
-            <div className="grid gap-3 sm:grid-cols-2">{roles.map(([tag,title,body])=><div key={tag} data-reveal className="senso-section-card p-7"><p className="text-[9px] tracking-[.18em] text-[#df7075]">{tag}</p><h3 className="senso-heading mt-7 text-2xl">{title}</h3><p className="mt-3 text-xs leading-6 text-white/45">{body}</p></div>)}</div>
-          </div>
-        </section>
-
-        <section id="how" data-reveal className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32">
-          <p className="text-[10px] tracking-[.25em] text-[#e56a70]">03 — AS EASY AS A TAP</p><h2 className="senso-heading mt-5 text-5xl sm:text-7xl">Four easy steps.</h2>
-          <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{steps.map(([n,t,d])=><div key={n} data-reveal className="senso-step p-7"><span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#d94b5d]/25 bg-[#a72b40]/10 text-[#ed7884]"><LineIcon name={n === "01" ? "nfc" : n === "02" ? "spark" : n === "03" ? "sliders" : "chef"} className="h-6 w-6" /></span><span className="ml-auto font-mono text-xs tracking-[.18em] text-white/25">{n}</span><h3 className="senso-heading mt-10 text-3xl">{t}</h3><p className="mt-3 text-xs leading-6 text-white/45">{d}</p></div>)}</div>
-          <div className="mt-14 flex flex-col items-start justify-between gap-6 border-y border-white/10 py-8 sm:flex-row sm:items-center"><div><p className="text-[9px] tracking-[.2em] text-[#df7075]">NO APP DOWNLOAD REQUIRED</p><p className="senso-heading mt-2 text-3xl">One tap. Straight to your menu.</p></div><Link href={demo ? "/r/ember-crust?table=T04" : "/signup"} className="senso-red-button px-6 py-4 text-[9px] tracking-[.1em]">TRY THE DEMO MENU ↗</Link></div>
-        </section>
-
-        <section id="demo" data-reveal className="scroll-mt-24 border-y border-rose-300/10 bg-[#16090d]/80 px-5 py-24 sm:px-8 sm:py-32">
-          <div className="mx-auto max-w-7xl">
-            <p className="text-[10px] tracking-[.25em] text-[#f08089]">04 — TRY IT YOURSELF</p>
-            <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_.8fr] lg:items-end">
-              <div><h2 className="senso-heading text-5xl leading-[1.03] sm:text-7xl">Take a look.<br /><em>Try everything.</em></h2>
-                <p className="mt-6 max-w-xl text-sm leading-7 text-white/55">Explore a sample restaurant, place a test order and see how the team tools work. No setup needed.</p>
-              </div>
-              <div className="flex flex-wrap gap-3 lg:justify-end">
-                <Link href="/demo" className="senso-red-button px-7 py-4 text-[10px] font-semibold tracking-[.08em]">OPEN FULL DEMO ↗</Link>
-                <Link href="/r/ember-crust?table=T04" className="senso-outline-button px-7 py-4 text-[10px] font-semibold tracking-[.08em]">VIEW SAMPLE MENU</Link>
-              </div>
-            </div>
-            <div className="mt-12 grid gap-4 md:grid-cols-3">
-              <article className="senso-section-card p-7"><span className="text-2xl">🍽️</span><h3 className="senso-heading mt-6 text-2xl">Explore the menu</h3><p className="mt-3 text-xs leading-6 text-white/50">Browse sample dishes, change options and add items to your cart.</p></article>
-              <article className="senso-section-card p-7"><span className="text-2xl">🧾</span><h3 className="senso-heading mt-6 text-2xl">Place a test order</h3><p className="mt-3 text-xs leading-6 text-white/50">Try the full guest flow with sample tables and test data.</p></article>
-              <article className="senso-section-card p-7"><span className="text-2xl">⚡</span><h3 className="senso-heading mt-6 text-2xl">See the team tools</h3><p className="mt-3 text-xs leading-6 text-white/50">Switch between the owner, kitchen and staff views in the demo.</p></article>
-            </div>
-          </div>
-        </section>
-
-        <section id="pricing" data-reveal className="scroll-mt-24 border-y border-white/[.09] bg-black/35 px-5 py-24 sm:px-8 sm:py-32">
-          <div className="mx-auto max-w-7xl"><p className="text-[10px] tracking-[.25em] text-[#e56a70]">04 — YOUR RESTAURANT, YOUR GROWTH</p><div className="mt-5 flex flex-col justify-between gap-6 md:flex-row md:items-end"><h2 className="senso-heading text-5xl sm:text-7xl">Ready to make<br /><em>service easier?</em></h2><p className="max-w-md text-sm leading-7 text-white/45">Create your restaurant workspace to explore available plans, manage your menu and bring your tables online.</p></div>
-            <div className="senso-section-card mt-12 flex flex-col justify-between gap-8 p-8 sm:flex-row sm:items-center sm:p-12"><div><p className="text-[9px] tracking-[.2em] text-[#df7075]">START YOUR TAPMENU EXPERIENCE</p><h3 className="senso-heading mt-4 text-4xl sm:text-5xl">Let's get your restaurant online.</h3><p className="mt-4 max-w-xl text-xs leading-6 text-white/45">Sign up to create your restaurant, or log in to manage the one you already have.</p></div><div className="flex shrink-0 flex-wrap gap-3"><Link href="/signup" className="senso-red-button px-7 py-4 text-[9px] tracking-[.1em]">CREATE ACCOUNT</Link><Link href="/login" className="senso-outline-button px-7 py-4 text-[9px] tracking-[.1em]">LOG IN</Link></div></div>
-          </div>
-        </section>
-
-        <footer id="contact" className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20"><div className="flex flex-col justify-between gap-8 border-b border-white/10 pb-10 md:flex-row md:items-end"><div><Link href="/" className="senso-wordmark text-2xl">TAPMENU</Link><p className="mt-4 max-w-sm text-xs leading-6 text-white/40">A more memorable menu. A more connected restaurant. Every table starts with a tap.</p></div><div className="flex flex-wrap gap-x-7 gap-y-3 text-[9px] tracking-[.16em] text-white/55"><Link href="/r/ember-crust?table=T04" className="hover:text-white">DEMO MENU</Link><Link href="/signup" className="hover:text-white">SIGN UP</Link><Link href="/login" className="hover:text-white">LOG IN</Link><a href="#platform" className="hover:text-white">PLATFORM</a><a href="#demo" className="hover:text-white">DEMO</a><a href="#pricing" className="hover:text-white">PRICING</a></div></div><div className="flex flex-col justify-between gap-3 pt-6 text-[9px] tracking-[.1em] text-white/30 sm:flex-row"><span>© {new Date().getFullYear()} TAPMENU. ALL RIGHTS RESERVED.</span><span>MADE FOR BETTER DINING.</span></div></footer>
+      <div className="border-y border-line bg-surface py-5" aria-label="Capabilities">
+        <div className="lp-marquee-wrap"><div className="lp-marquee">{[...marquee, ...marquee].map((m, i) => <span key={i} className="mx-6 inline-flex items-center gap-6 text-[11px] font-semibold tracking-[.2em] text-brand-deep"><span>{m}</span><span className="h-1.5 w-1.5 rounded-full bg-signal" aria-hidden="true" /></span>)}</div></div>
       </div>
+
+      <section id="experience" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32">
+        <p className="text-[11px] font-semibold tracking-[.25em] text-signal">01 — THE GUEST EXPERIENCE</p>
+        <div className="mt-5 grid gap-7 md:grid-cols-[1.1fr_.9fr] md:items-end">
+          <h2 className="font-display text-5xl leading-[1.02] text-ink sm:text-7xl">A menu made<br /><em className="text-brand">for everyone.</em></h2>
+          <p className="max-w-lg text-[15px] leading-7 text-mute">Paper menus show a list. TapMenu creates a moment. Guests discover dishes, understand every option and order at their own pace.</p>
+        </div>
+        <div className="mt-14 grid gap-5 sm:grid-cols-2">
+          {features.map(([n, t, d, icon]) => (
+            <article key={n} data-reveal className="lp-card group min-h-[230px] p-7 sm:p-9">
+              <div className="flex items-center justify-between"><span className="font-display text-4xl text-brand/25">{n}</span><span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-soft text-brand transition duration-500 group-hover:bg-brand group-hover:text-[#ffffff]"><LineIcon name={icon} className="h-5 w-5" /></span></div>
+              <h3 className="mt-9 font-display text-3xl text-ink">{t}</h3>
+              <p className="mt-3 max-w-lg text-sm leading-6 text-mute">{d}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="platform" className="border-y border-line bg-brand-soft/60 px-5 py-24 sm:px-8 sm:py-32">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.85fr_1.15fr]">
+          <div>
+            <p className="text-[11px] font-semibold tracking-[.25em] text-signal">02 — ONE CONNECTED PLATFORM</p>
+            <h2 className="mt-5 font-display text-5xl leading-[1.03] text-ink sm:text-7xl">Simple for guests.<br /><em className="text-brand">Powerful for your team.</em></h2>
+            <p className="mt-6 max-w-md text-[15px] leading-7 text-mute">Guests get an easy menu. Your team manages dishes, prices, tables and orders from one place.</p>
+            <Link href="/signup" className="lp-shine mt-8 inline-flex min-h-[48px] items-center rounded-full bg-brand px-7 text-[11px] font-semibold tracking-[.1em] text-[#ffffff] shadow-[0_14px_30px_-12px_rgba(8,118,83,.7)] transition hover:bg-brand-deep">SET UP YOUR RESTAURANT</Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {roles.map(([tag, title, body]) => (
+              <div key={tag} data-reveal className="lp-card p-7"><p className="text-[10px] font-semibold tracking-[.18em] text-brand">{tag}</p><h3 className="mt-7 font-display text-2xl text-ink">{title}</h3><p className="mt-3 text-sm leading-6 text-mute">{body}</p></div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="how" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32">
+        <p className="text-[11px] font-semibold tracking-[.25em] text-signal">03 — AS EASY AS A TAP</p>
+        <h2 className="mt-5 font-display text-5xl text-ink sm:text-7xl">Four easy steps.</h2>
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {steps.map(([n, t, d, icon]) => (
+            <div key={n} data-reveal className="lp-card flex flex-col p-7">
+              <div className="flex items-center justify-between"><span className="grid h-12 w-12 place-items-center rounded-2xl bg-brand text-[#ffffff]"><LineIcon name={icon} className="h-6 w-6" /></span><span className="font-mono text-xs tracking-[.18em] text-mute">{n}</span></div>
+              <h3 className="mt-10 font-display text-3xl text-ink">{t}</h3><p className="mt-3 text-sm leading-6 text-mute">{d}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-14 flex flex-col items-start justify-between gap-6 border-y border-line py-8 sm:flex-row sm:items-center">
+          <div><p className="text-[10px] font-semibold tracking-[.2em] text-signal">NO APP DOWNLOAD REQUIRED</p><p className="mt-2 font-display text-3xl text-ink">One tap. Straight to your menu.</p></div>
+          <Link href={menuHref} className="inline-flex min-h-[48px] items-center rounded-full border border-brand/30 px-7 text-[11px] font-semibold tracking-[.1em] text-brand-deep transition hover:bg-brand hover:text-[#ffffff]">TRY THE DEMO MENU ↗</Link>
+        </div>
+      </section>
+
+      <section id="demo" className="tm-dark relative scroll-mt-24 overflow-hidden bg-brand-night px-5 py-24 text-white sm:px-8 sm:py-32">
+        <div className="lp-orb right-0 top-0 h-96 w-96 bg-brand-bright/30" aria-hidden="true" />
+        <div className="mx-auto max-w-7xl">
+          <p className="text-[11px] font-semibold tracking-[.25em] text-[#f3b4bb]">04 — TRY IT YOURSELF</p>
+          <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_.8fr] lg:items-end">
+            <div><h2 className="font-display text-5xl leading-[1.03] sm:text-7xl">Take a look.<br /><em className="text-[#f3b4bb]">Try everything.</em></h2><p className="mt-6 max-w-xl text-[15px] leading-7 text-[#e3c1c6]">Explore a sample restaurant, place a test order and see how the team tools work. No setup needed.</p></div>
+            <div className="flex flex-wrap gap-3 lg:justify-end">
+              <Link href="/demo" className="lp-shine inline-flex min-h-[52px] items-center rounded-full bg-gradient-to-b from-[#c93a4d] to-[#8f1d2c] px-7 text-[11px] font-semibold tracking-[.1em] text-white shadow-[0_16px_36px_-12px_rgba(179,40,58,.75)]">OPEN FULL DEMO ↗</Link>
+              <Link href={menuHref} className="inline-flex min-h-[52px] items-center rounded-full border border-white/30 px-7 text-[11px] font-semibold tracking-[.1em] text-white transition hover:bg-white/10">VIEW SAMPLE MENU</Link>
+            </div>
+          </div>
+          <div className="mt-12 grid gap-4 md:grid-cols-3">
+            {[["plate", "Explore the menu", "Browse sample dishes, change options and add items to your cart."], ["check", "Place a test order", "Try the full guest flow with sample tables and test data."], ["bolt", "See the team tools", "Switch between the owner, kitchen and staff views in the demo."]].map(([icon, t, d]) => (
+              <article key={t} data-reveal className="rounded-3xl border border-white/10 bg-white/[.05] p-7 backdrop-blur transition duration-500 hover:-translate-y-1.5 hover:border-[#f08a96]/40 hover:bg-white/[.08]"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#f08a96]/15 text-[#ef9aa4]"><LineIcon name={icon} className="h-5 w-5" /></span><h3 className="mt-6 font-display text-2xl">{t}</h3><p className="mt-3 text-sm leading-6 text-[#e3c1c6]">{d}</p></article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32">
+        <p className="text-[11px] font-semibold tracking-[.25em] text-signal">05 — YOUR RESTAURANT, YOUR GROWTH</p>
+        <div className="mt-5 flex flex-col justify-between gap-6 md:flex-row md:items-end"><h2 className="font-display text-5xl text-ink sm:text-7xl">Ready to make<br /><em className="text-brand">service easier?</em></h2><p className="max-w-md text-[15px] leading-7 text-mute">Pick the setup that fits your venue. We create approved restaurant workspaces and help you go live.</p></div>
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {plans.map((p) => (
+            <article key={p.name} data-reveal className={`lp-card flex flex-col p-8 ${p.featured ? "!border-brand !bg-gradient-to-b from-brand to-brand-deep text-white shadow-[0_40px_80px_-30px_rgba(8,118,83,.7)]" : ""}`}>
+              <div className="flex items-center justify-between"><p className={`text-[10px] font-semibold tracking-[.2em] ${p.featured ? "text-[#f1ccd0]" : "text-brand"}`}>{p.tag.toUpperCase()}</p>{p.featured && <span className="rounded-full bg-white px-2.5 py-1 text-[9px] font-bold tracking-wider text-signal">MOST CHOSEN</span>}</div>
+              <h3 className={`mt-6 font-display text-4xl ${p.featured ? "text-[#ffffff]" : "text-ink"}`}>{p.name}</h3>
+              <p className={`mt-2 text-sm ${p.featured ? "text-[#f1ccd0]" : "text-mute"}`}>{p.price}</p>
+              <ul className="mt-7 flex-1 space-y-3">{p.points.map((pt) => <li key={pt} className={`flex items-start gap-3 text-sm ${p.featured ? "text-[#f7e6e8]" : "text-ink"}`}><LineIcon name="check" className={`mt-0.5 h-4 w-4 shrink-0 ${p.featured ? "text-[#ef9aa4]" : "text-brand"}`} />{pt}</li>)}</ul>
+              <Link href="/signup" className={`lp-shine mt-9 inline-flex min-h-[48px] items-center justify-center rounded-full text-[11px] font-semibold tracking-[.1em] transition ${p.featured ? "bg-white text-brand-deep hover:bg-brand-soft" : "bg-brand text-[#ffffff] hover:bg-brand-deep"}`}>REQUEST A QUOTE</Link>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <footer id="contact" className="border-t border-line bg-surface">
+        <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20">
+          <div className="flex flex-col justify-between gap-8 border-b border-line pb-10 md:flex-row md:items-end">
+            <div><Link href="/" className="senso-wordmark text-2xl">TAPMENU</Link><p className="mt-4 max-w-sm text-sm leading-6 text-mute">A more memorable menu. A more connected restaurant. Every table starts with a tap.</p></div>
+            <div className="flex flex-wrap gap-x-7 gap-y-3 text-[11px] font-medium tracking-[.14em] text-mute">
+              <Link href={menuHref} className="hover:text-brand">DEMO MENU</Link><Link href="/signup" className="hover:text-brand">REQUEST ACCESS</Link><Link href="/login" className="hover:text-brand">LOG IN</Link><a href="#platform" className="hover:text-brand">PLATFORM</a><a href="#pricing" className="hover:text-brand">PRICING</a>
+            </div>
+          </div>
+          <div className="flex flex-col justify-between gap-3 pt-6 text-[10px] tracking-[.1em] text-mute sm:flex-row"><span>© {new Date().getFullYear()} TAPMENU. ALL RIGHTS RESERVED.</span><span>MADE FOR BETTER DINING.</span></div>
+        </div>
+      </footer>
     </main>
   );
 }

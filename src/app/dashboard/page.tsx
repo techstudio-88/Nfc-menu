@@ -98,7 +98,7 @@ export default function Overview() {
               {series.map((p) => (
                 <div key={p.key} className="group relative flex h-full flex-1 flex-col justify-end">
                   <div className="rounded-t-md bg-gradient-to-t from-orange-600 to-amber-300 transition-all group-hover:brightness-125" style={{ height: `${Math.max(2, (p.revenue / max) * 100)}%` }} />
-                  <span className="pointer-events-none absolute -top-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-black px-2 py-1 text-xs group-hover:block">
+                  <span className="pointer-events-none absolute -top-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-brand-night px-2 py-1 text-xs text-[#ffffff] group-hover:block">
                     {formatMoney(p.revenue, cur)} · {p.count}
                   </span>
                   {d.days <= 14 && <span className="mt-1.5 text-center text-[10px] text-neutral-500">{p.label}</span>}

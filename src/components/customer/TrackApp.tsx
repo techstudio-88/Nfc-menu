@@ -97,7 +97,7 @@ export default function TrackApp({ slug, token }: { slug: string; token: string 
   };
 
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-[#0b0b0b] px-5 pb-16 pt-8 text-neutral-100" style={{ ["--brand" as string]: brand }}>
+    <div className="tm-dark relative min-h-dvh overflow-hidden bg-[#0b0b0b] px-5 pb-16 pt-8 text-neutral-100" style={{ ["--brand" as string]: brand }}>
       <div className="pointer-events-none absolute -top-32 left-1/2 h-80 w-[40rem] -translate-x-1/2 rounded-full opacity-30 blur-[100px]" style={{ background: brand }} />
       <div className="relative mx-auto max-w-md">
         <Link href={`/r/${slug}`} className="text-sm text-neutral-400 hover:text-white">
