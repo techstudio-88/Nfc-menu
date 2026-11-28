@@ -25,13 +25,6 @@ function guestCustomerKey(slug: string) {
   return value;
 }
 
-function guestCustomerKey(slug: string) {
-  const key = `tm-guest-id-${slug}`;
-  let value = localStorage.getItem(key);
-  if (!value) { value = crypto.randomUUID(); localStorage.setItem(key, value); }
-  return value;
-}
-
 const THEMES: Record<string, Record<string, string>> = {
   porcelain: { "--bg": "#faf6f1", "--fg": "#1f1416", "--muted": "#7a6a6c", "--card": "#ffffff", "--line": "rgba(80,20,30,.12)" },
   midnight: { "--bg": "#0b0b0b", "--fg": "#f5f1ea", "--muted": "#a39b8f", "--card": "#151413", "--line": "rgba(255,255,255,.11)" },
