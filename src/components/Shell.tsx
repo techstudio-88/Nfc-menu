@@ -4,59 +4,92 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { api } from "@/lib/client";
 import { cx } from "@/components/ui";
+import { themeStyle } from "@/lib/theme";
 
 export type NavItem = { href: string; label: string; icon: string };
 
-export function Shell({ nav, brand, sub, user, restaurantSlug, children }: { nav: NavItem[]; brand: string; sub: string; user: string; restaurantSlug?: string; children: React.ReactNode }) {
+const isActive = (href: string, path: string) => path === href || (href !== "/dashboard" && path.startsWith(href + "/"));
+
+export function Shell({ nav, brand, sub, user, restaurantSlug, theme, children }: { nav: NavItem[]; brand: string; sub: string; user: string; restaurantSlug?: string; theme?: { primary?: string | null; accent?: string | null }; children: React.ReactNode }) {
   const path = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const isDemo = user.toLowerCase().startsWith("demo-");
+  const guest = restaurantSlug ? `/r/${restaurantSlug}?table=T04` : "/";
   const logout = async () => {
     await api("/api/auth/logout", { method: "POST", body: {} });
     router.push("/login");
     router.refresh();
   };
-  const links = (
-    <nav className="space-y-1.5" aria-label="Main">
+
+  const links = (dark: boolean) => (
+    <nav className="space-y-1" aria-label="Main">
       {nav.map((n) => {
-        const active = n.href === path || (n.href.length > 10 && path.startsWith(n.href)) || (n.href === "/dashboard" && path === "/dashboard");
+        const active = isActive(n.href, path);
         return (
           <Link key={n.href} href={n.href} onClick={() => setOpen(false)} aria-current={active ? "page" : undefined}
-            className={cx("group flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition duration-300", active ? "bg-emerald-500/15 text-emerald-100 shadow-[inset_2px_0_0_#087653,0_8px_24px_rgba(135,25,45,.12)]" : "text-neutral-400 hover:bg-emerald-500/[.07] hover:text-white")}>
-            <span className={cx("flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border text-base transition", active ? "border-emerald-400/25 bg-gradient-to-br from-emerald-500/25 to-red-950/60 text-emerald-100 shadow-[0_0_18px_rgba(190,45,65,.16)]" : "border-white/[.06] bg-white/[.035] text-neutral-400 group-hover:border-emerald-400/20")} aria-hidden>{n.icon}</span>
+            className={cx("group flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition duration-300",
+              dark
+                ? active ? "bg-white/10 text-white shadow-[inset_3px_0_0_#f08a96]" : "text-[#e3c1c6] hover:bg-white/[.06] hover:text-white"
+                : active ? "bg-brand-soft text-brand-deep shadow-[inset_3px_0_0_#087653]" : "text-mute hover:bg-brand-soft/60 hover:text-ink")}>
+            <span className={cx("flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border text-base transition",
+              dark ? (active ? "border-[#f08a96]/30 bg-[#f08a96]/15" : "border-white/10 bg-white/5") : (active ? "border-brand/25 bg-surface" : "border-line bg-surface"))} aria-hidden>{n.icon}</span>
             <span className="flex-1">{n.label}</span>
-            {active && <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 shadow-[0_0_10px_rgba(244,114,128,.9)]" />}
+            {active && <span className={cx("h-1.5 w-1.5 rounded-full", dark ? "bg-[#f08a96] shadow-[0_0_10px_#f08a96]" : "bg-brand")} />}
           </Link>
         );
       })}
     </nav>
   );
+
+  const pill = "rounded-full border border-brand/25 bg-surface px-3 py-1.5 text-[10px] font-medium tracking-wider text-brand-deep transition hover:bg-brand hover:text-[#ffffff]";
+
   return (
-    <div className="tm-shell min-h-dvh lg:grid lg:grid-cols-[260px_1fr]">
-      <aside className="sticky top-0 hidden h-dvh flex-col border-r border-emerald-400/10 bg-[#0b080a] p-5 lg:flex">
+    <div className="tm-shell min-h-dvh lg:grid lg:grid-cols-[260px_1fr]" style={themeStyle(theme?.primary, theme?.accent)}>
+      <aside className="tm-aside tm-dark sticky top-0 hidden h-dvh flex-col border-r border-white/10 p-5 lg:flex">
         <Link href="/" className="mb-8 block">
-          <p className="font-display text-2xl tracking-wide text-white">Tap<span className="gold-text">Menu</span> <span className="text-sm text-emerald-300">3D</span></p>
-          <p className="mt-1 truncate text-xs text-neutral-500">{brand}</p>
-          <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-500/[.06] px-3 py-1 text-[9px] tracking-[.18em] text-emerald-200"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_9px_#34d399]"/> RESTAURANT STUDIO</span>
+          <p className="font-display text-2xl tracking-wide text-white">Tap<span className="gold-text">Menu</span> <span className="text-sm text-white/70">3D</span></p>
+          <p className="mt-1 truncate text-xs text-[#c9a1a7]">{brand}</p>
+          <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[9px] tracking-[.18em] text-[#f4c8cd]"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#f08a96] shadow-[0_0_9px_#f08a96]" /> RESTAURANT STUDIO</span>
         </Link>
-        {links}
-        <div className="mt-auto space-y-2 border-t border-white/10 pt-4 text-xs text-neutral-500">
+        {links(true)}
+        <div className="mt-auto space-y-2 border-t border-white/10 pt-4 text-xs text-[#c9a1a7]">
           <p className="truncate">{user}</p>
-          <p className="uppercase tracking-wider text-emerald-300/80">{sub}</p>
-          <button onClick={logout} className="rounded-lg border border-white/10 px-3 py-2 text-neutral-300 transition hover:border-emerald-400/30 hover:bg-emerald-500/10 hover:text-white">↪ Sign out</button>
+          <p className="uppercase tracking-wider text-[#ef9aa4]">{sub}</p>
+          <button onClick={logout} className="rounded-lg border border-white/15 px-3 py-2 text-[#f3dde0] transition hover:border-[#f08a96]/50 hover:bg-white/5 hover:text-white">↪ Sign out</button>
         </div>
       </aside>
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-emerald-400/10 bg-[#0b080a]/90 px-4 py-3 backdrop-blur-xl lg:hidden">
-        <div><p className="font-display text-xl text-white">Tap<span className="gold-text">Menu</span> <span className="text-xs text-emerald-300">3D</span></p><p className="text-[10px] text-neutral-500">{brand}</p></div>
-        <button onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label="Menu" className="rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">{open ? "✕" : "☰"}</button>
+
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-surface/85 px-4 py-3 backdrop-blur-xl lg:hidden">
+        <div>
+          <p className="font-display text-xl text-ink">Tap<span className="gold-text">Menu</span> <span className="text-xs text-brand">3D</span></p>
+          <p className="text-[10px] text-mute">{brand}</p>
+        </div>
+        <button onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label="Menu" className="rounded-xl border border-line bg-surface px-3 py-2 text-sm text-ink">{open ? "✕" : "☰"}</button>
       </header>
-      {open && <div className="border-b border-emerald-400/10 bg-[#0b080a] p-4 lg:hidden">{links}<button onClick={logout} className="mt-3 rounded-lg px-3 py-2 text-sm text-neutral-300">↪ Sign out</button></div>}
+      {open && <div className="border-b border-line bg-surface p-4 lg:hidden">{links(false)}<button onClick={logout} className="mt-3 rounded-lg px-3 py-2 text-sm text-mute">↪ Sign out</button></div>}
+
       <main className="min-w-0 p-4 sm:p-6 lg:p-8">
-        {isDemo && <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-emerald-400/20 bg-gradient-to-r from-emerald-950/70 via-[#211014] to-neutral-950 px-4 py-3 shadow-[0_12px_38px_rgba(100,15,32,.12)]">
-          <div className="flex items-center gap-3"><span className="flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-300/20 bg-emerald-500/10 text-emerald-200">✦</span><div><p className="text-xs font-semibold tracking-[.14em] text-emerald-100">DEMO WORKSPACE</p><p className="mt-1 text-[11px] text-white/45">Explore every panel with isolated sample data. Demo sessions expire after 24 hours.</p></div></div>
-          <div className="flex flex-wrap items-center gap-2"><Link href="/dashboard" className="rounded-full border border-emerald-300/20 px-3 py-2 text-[10px] tracking-wider text-emerald-100 hover:bg-emerald-500/10">OWNER ↗</Link><Link href="/dashboard/menu" className="rounded-full border border-emerald-300/20 px-3 py-2 text-[10px] tracking-wider text-emerald-100 hover:bg-emerald-500/10">MENU ↗</Link><Link href="/dashboard/orders" className="rounded-full border border-emerald-300/20 px-3 py-2 text-[10px] tracking-wider text-emerald-100 hover:bg-emerald-500/10">ORDERS ↗</Link><Link href="/dashboard/venues" className="rounded-full border border-emerald-300/20 px-3 py-2 text-[10px] tracking-wider text-emerald-100 hover:bg-emerald-500/10">TABLES ↗</Link><Link href={restaurantSlug ? "/r/" + restaurantSlug + "?table=T04" : "/"} className="rounded-full border border-emerald-300/20 px-3 py-2 text-[10px] tracking-wider text-emerald-100 hover:bg-emerald-500/10">GUEST MENU ↗</Link><Link href={restaurantSlug ? "/r/" + restaurantSlug + "?table=T04" : "/"} className="rounded-full border border-emerald-300/20 bg-emerald-500/10 px-3 py-2 text-[10px] tracking-wider text-emerald-100 transition hover:border-emerald-200/40 hover:bg-emerald-500/20">CUSTOMER PANEL ↗</Link><Link href="/kitchen" className="rounded-full border border-emerald-300/20 px-3 py-2 text-[10px] tracking-wider text-emerald-100 hover:bg-emerald-500/10">KITCHEN PREVIEW ↗</Link><Link href="/staff" className="rounded-full border border-emerald-300/20 px-3 py-2 text-[10px] tracking-wider text-emerald-100 hover:bg-emerald-500/10">FLOOR PREVIEW ↗</Link><span className="rounded-full border border-emerald-300/20 px-3 py-2 text-[10px] tracking-wider text-emerald-200">24-HOUR SESSION</span></div>
-        </div>}
+        {isDemo && (
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand/20 bg-brand-soft px-4 py-3">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-[#ffffff]">✦</span>
+              <div>
+                <p className="text-xs font-semibold tracking-[.14em] text-brand-deep">DEMO WORKSPACE</p>
+                <p className="mt-0.5 text-[11px] text-mute">Explore every panel with isolated sample data. Sessions expire after 24 hours.</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link href="/dashboard" className={pill}>OWNER</Link>
+              <Link href="/dashboard/menu" className={pill}>MENU</Link>
+              <Link href="/dashboard/orders" className={pill}>ORDERS</Link>
+              <Link href="/dashboard/venues" className={pill}>TABLES</Link>
+              <Link href={guest} className={pill}>GUEST MENU ↗</Link>
+              <Link href="/kitchen" className={pill}>KITCHEN</Link>
+              <Link href="/staff" className={pill}>FLOOR</Link>
+            </div>
+          </div>
+        )}
         {children}
       </main>
     </div>
