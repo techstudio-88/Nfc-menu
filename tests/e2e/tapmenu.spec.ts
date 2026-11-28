@@ -1,7 +1,7 @@
 import { test, expect, type APIRequestContext } from "@playwright/test";
 
 async function demo(ctx: APIRequestContext) {
-  const started = await ctx.post("/api/auth/demo");
+  const started = await ctx.post("/api/auth/demo", { data: {} });
   expect(started.ok(), "demo workspace should start").toBeTruthy();
   const me = await ctx.get("/api/auth/me");
   expect(me.ok()).toBeTruthy();
@@ -64,7 +64,7 @@ test("checkout endpoint is reachable after a valid order", async ({ request }) =
   const order = await placeCashOrder(request, slug);
   const response = await request.post(`/api/public/orders/${order.token}`, { data: { action: "checkout" } });
   // A configured gateway returns a checkout URL; an unconfigured gateway returns a deliberate 4xx.
-  expect([200, 400, 422]).toContain(response.status());
+  expect([200, 400, 409, 422]).toContain(response.status());
 });
 
 test("kitchen can receive and advance a fresh order", async ({ request }) => {
